@@ -3,7 +3,6 @@ package org.jakegodsall.models;
 import lombok.*;
 
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter

@@ -1,0 +1,14 @@
+{
+  "ru": {
+    "name": "Russian",
+    "supports_stress": true,
+    "tenses": ["PAST", "PRESENT", "FUTURE"],
+    "genders": ["MASCULINE", "FEMININE", "NEUTER"]
+  },
+  "pl": {
+    "name": "Polish",
+    "supports_stress": false,
+    "tenses": ["PAST", "PRESENT", "FUTURE"],
+    "genders": ["MASCULINE", "FEMININE", "NEUTER"]
+  }
+}

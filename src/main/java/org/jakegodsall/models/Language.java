@@ -1,5 +1,6 @@
 package org.jakegodsall.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.jakegodsall.models.enums.Genders;
 import org.jakegodsall.models.enums.Tense;
@@ -7,7 +8,6 @@ import org.jakegodsall.models.enums.Tense;
 import java.util.List;
 
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
@@ -16,6 +16,8 @@ import java.util.List;
 @ToString
 public class Language {
     private String name;
+
+    @JsonProperty("supports_stress")
     private boolean supportsStress;
     private List<Tense> tenses;
     private List<Genders> genders;
