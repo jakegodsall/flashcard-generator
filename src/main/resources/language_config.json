@@ -10,5 +10,11 @@
     "supports_stress": false,
     "tenses": ["PAST", "PRESENT", "FUTURE"],
     "genders": ["MASCULINE", "FEMININE", "NEUTER"]
+  },
+  "es": {
+    "name": "Spanish",
+    "supports_stress": false,
+    "tenses": ["PAST", "PRESENT", "FUTURE"],
+    "genders": ["MASCULINE", "FEMININE"]
   }
 }

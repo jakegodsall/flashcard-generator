@@ -13,7 +13,6 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 @Builder
-@ToString
 public class Language {
     private String name;
 
@@ -21,4 +20,9 @@ public class Language {
     private boolean supportsStress;
     private List<Tense> tenses;
     private List<Genders> genders;
+
+    @Override
+    public String toString() {
+        return "Language: " + this.name + "\n";
+    }
 }

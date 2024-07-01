@@ -6,8 +6,7 @@ import org.jakegodsall.models.Language;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class LanguageConfig {
     private static final String LANGUAGE_CONFIG_FILE = "/language_config.json";
@@ -31,5 +30,13 @@ public class LanguageConfig {
 
     public static Language getLanguage(String code) {
         return languageMap.get(code);
+    }
+
+    public static Map<String, String> getAllLanguageNames() {
+        Map<String, String> languageNames = new HashMap<>();
+        for (Map.Entry<String, Language> entry : languageMap.entrySet()) {
+            languageNames.put(entry.getKey(), entry.getValue().getName());
+        }
+        return languageNames;
     }
 }
