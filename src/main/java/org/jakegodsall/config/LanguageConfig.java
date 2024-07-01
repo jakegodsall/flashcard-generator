@@ -10,7 +10,7 @@ import java.util.*;
 
 public class LanguageConfig {
     private static final String LANGUAGE_CONFIG_FILE = "/language_config.json";
-    private static Map<String, Language> languageMap = new HashMap<>();
+    public static Map<String, Language> languageMap;
 
     static {
         loadConfig();

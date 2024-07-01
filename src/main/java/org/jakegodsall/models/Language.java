@@ -23,6 +23,6 @@ public class Language {
 
     @Override
     public String toString() {
-        return "Language: " + this.name + "\n";
+        return this.name;
     }
 }

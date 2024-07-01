@@ -15,8 +15,8 @@ public class CommandLineInterface {
 
     public void main() {
         printLanguageOptions();
-        Language chosenLanguage = getLanguageFromUser();
-        System.out.println(chosenLanguage);
+        Language chosenLanguage = getLanguageFromUser(scanner);
+        System.out.println("Enter a word: ");
     }
 
     public void printLanguageOptions() {
@@ -26,7 +26,7 @@ public class CommandLineInterface {
         }
     }
 
-    public Language getLanguageFromUser() {
+    public Language getLanguageFromUser(Scanner scanner) {
         boolean validInput = false;
         String input = "";
         while (!validInput) {
@@ -37,6 +37,8 @@ public class CommandLineInterface {
             }
         }
         scanner.close();
-        return LanguageConfig.getLanguage(input);
+        Language chosenLanguage = LanguageConfig.getLanguage(input);
+        System.out.println("Chosen language: " + chosenLanguage);
+        return chosenLanguage;
     }
 }

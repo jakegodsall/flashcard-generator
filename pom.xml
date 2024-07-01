@@ -16,6 +16,7 @@
         <mockito.version>5.11.0</mockito.version>
         <projectlombok.version>1.18.32</projectlombok.version>
         <jackson.version>2.17.1</jackson.version>
+        <assertj.version>3.25.3</assertj.version>
     </properties>
 
     <dependencies>
@@ -31,6 +32,12 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <!-- assertJ -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
         </dependency>
         <!-- Mockito -->
         <dependency>
