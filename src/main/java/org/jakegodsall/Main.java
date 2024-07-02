@@ -4,8 +4,10 @@ import org.jakegodsall.config.LanguageConfig;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.view.CommandLineInterface;
 
+import java.io.IOException;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 //        Language polish = LanguageConfig.getLanguage("pl");
 //        if (polish != null) {
 //            System.out.println("Language: " + polish.getName());
