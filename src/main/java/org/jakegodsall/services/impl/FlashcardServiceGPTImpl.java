@@ -15,6 +15,7 @@ import org.jakegodsall.models.Language;
 import org.jakegodsall.services.FlashcardService;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,11 +27,11 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost request = new HttpPost(API_URL);
 
-        String bearerToken = System.getenv("BEARER_TOKEN");
+        String bearerToken = System.getenv("OPENAI_API_KEY");
 
         request.setHeader("Authorization", "Bearer " + bearerToken);
         request.setHeader("Accept", "application/json");
-        request.setHeader("Content-Type", "application/json");
+        request.setHeader("Content-Type", "application/json; charset=UTF-8");
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -48,7 +49,7 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
 
         String json = mapper.writeValueAsString(requestBody);
 
-        StringEntity entity = new StringEntity(json);
+        StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
         request.setEntity(entity);
 
         System.out.println(json);
