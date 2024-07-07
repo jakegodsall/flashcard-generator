@@ -2,6 +2,7 @@ package org.jakegodsall.view;
 
 import org.jakegodsall.config.LanguageConfig;
 import org.jakegodsall.models.Language;
+import org.jakegodsall.view.cli.CommandLineInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class CommandLineInterfaceTest {
 

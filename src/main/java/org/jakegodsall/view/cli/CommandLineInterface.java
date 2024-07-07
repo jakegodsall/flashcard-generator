@@ -1,31 +1,26 @@
-package org.jakegodsall.view;
+package org.jakegodsall.view.cli;
 
 import org.jakegodsall.config.LanguageConfig;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.impl.FlashcardServiceGPTImpl;
-import org.w3c.dom.ls.LSOutput;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 
 public class CommandLineInterface {
     private final Scanner scanner = new Scanner(System.in);
 
     Map<String, String> languages = LanguageConfig.getAllLanguageNames();
 
-    public void main() throws IOException {
+    public void main() {
         printLanguageOptions();
+
         Language chosenLanguage = getLanguageFromUser(scanner);
-        System.out.println("Enter a word: ");
 
-        String word = "Give me a basic Polish sentence using the word rozumiem";
-
-        FlashcardService fs = new FlashcardServiceGPTImpl();
-
-        fs.getSentence(word, chosenLanguage);
+        LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage);
+        loh.getOptions();
     }
 
     public void printLanguageOptions() {
@@ -45,7 +40,6 @@ public class CommandLineInterface {
                 validInput = true;
             }
         }
-        scanner.close();
         Language chosenLanguage = LanguageConfig.getLanguage(input);
         System.out.println("Chosen language: " + chosenLanguage);
         return chosenLanguage;
