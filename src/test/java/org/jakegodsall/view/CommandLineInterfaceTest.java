@@ -25,7 +25,7 @@ class CommandLineInterfaceTest {
     }
 
     @Test
-    void getValidLanguageFromUser() {
+    void getLanguageFromUser_correctInputLowerCase() {
         String input = "ru";
         Language validLanguage = languages.get(input);
 
@@ -35,6 +35,20 @@ class CommandLineInterfaceTest {
 
         Language result = commandLineInterface.getLanguageFromUser(scanner);
 
-        assertThat(validLanguage).isEqualTo(result);
-        }
+        assertThat(result).isEqualTo(validLanguage);
+    }
+
+    @Test
+    void getLanguageFromUser_correctInputUpperCase() {
+        String input = "RU";
+        Language validLanguage = languages.get(input);
+
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        Scanner scanner = new Scanner(System.in);
+
+        Language result = commandLineInterface.getLanguageFromUser(scanner);
+
+        assertThat(result).isEqualTo(validLanguage);
+    }
 }

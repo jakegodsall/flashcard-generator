@@ -4,11 +4,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.jakegodsall.models.Language;
+import org.jakegodsall.models.enums.Tense;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
+import java.util.Scanner;
 
 @Getter
 @Setter
@@ -20,7 +22,7 @@ public class LanguageOptionsHandler {
     public Map<String, Object> getOptions() {
         System.out.println(selectedLanguage.toStringVerbose());
         try {
-            boolean isStress = getStress();
+            boolean isStress = getStress(br);
             System.out.println("Stress marks selected: " + isStress);
         } catch (IOException ioException) {
             System.out.println("exception");
@@ -30,7 +32,7 @@ public class LanguageOptionsHandler {
         return null;
     }
 
-    private boolean getStress() throws IOException {
+    public boolean getStress(BufferedReader bufferedReader) throws IOException {
         boolean isStress = false;
 
         System.out.println("Do you want stress marks on the words?");
@@ -39,13 +41,13 @@ public class LanguageOptionsHandler {
 
         String input = "";
         while (true) {
-            input = br.readLine();
+            input = bufferedReader.readLine();
             if (input != null) {
-                if (input.equals("y")) {
+                if (input.equalsIgnoreCase("y")) {
                     isStress = true;
                     break;
                 }
-                if (input.equals("n")) {
+                if (input.equalsIgnoreCase("n")) {
                     break;
                 }
             }
@@ -54,5 +56,34 @@ public class LanguageOptionsHandler {
         return isStress;
     }
 
+    public Tense getTense(BufferedReader bufferedReader) throws IOException {
+
+        System.out.println("Which tense do you want to use?");
+        for (Tense tense : selectedLanguage.getTenses()) {
+            System.out.println("[" + tense +"]");
+        }
+
+        Tense selectedTense = Tense.PRESENT;
+
+        String input;
+        while (true) {
+            input = bufferedReader.readLine().trim().toLowerCase();
+            switch (input) {
+                case "past":
+                    selectedTense = Tense.PAST;
+                    break;
+                case "present":
+                    break;
+                case "future":
+                    selectedTense = Tense.FUTURE;
+                    break;
+                default:
+                    System.out.println("Invalid input.");
+                    continue;
+            }
+            break;
+        }
+        return selectedTense;
+    }
 
 }
