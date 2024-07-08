@@ -72,4 +72,30 @@ class LanguageOptionsHandlerTest {
         assertThat(languageOptionsHandler.getTense(bufferedReader))
                 .isEqualTo(Tense.FUTURE);
     }
+
+    @Test
+    void getGender_correctInputLowerCase() throws IOException {
+        String input = "feminine";
+
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+
+        assertThat(languageOptionsHandler.getGender(bufferedReader))
+                .isEqualTo(Gender.FEMININE);
+    }
+
+    @Test
+    void getGender_correctInputUpperCase() throws IOException {
+        String input = "FEMININE";
+
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+
+        assertThat(languageOptionsHandler.getGender(bufferedReader))
+                .isEqualTo(Gender.FEMININE);
+    }
 }
