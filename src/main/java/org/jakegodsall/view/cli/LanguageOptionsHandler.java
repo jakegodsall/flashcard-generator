@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.jakegodsall.models.Language;
+import org.jakegodsall.models.Options;
 import org.jakegodsall.models.enums.Gender;
 import org.jakegodsall.models.enums.Tense;
 
@@ -21,17 +22,19 @@ public class LanguageOptionsHandler {
     private final Language selectedLanguage;
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    public Map<String, Object> getOptions() {
-        System.out.println(selectedLanguage.toStringVerbose());
+    public Options getOptions() {
+        Options options = new Options();
         try {
-            boolean isStress = getStress(br);
-            System.out.println("Stress marks selected: " + isStress);
+            if (selectedLanguage.isSupportsStress())
+                options.setStress(getStress(br));
+            options.setTense(getTense(br));
+            options.setGender(getGender(br));
         } catch (IOException ioException) {
             System.out.println("exception");
             System.err.println("Error reading input: " + ioException.getMessage());
         }
-
-        return null;
+        System.out.println(options);
+        return options;
     }
 
     public boolean getStress(BufferedReader bufferedReader) throws IOException {
@@ -106,6 +109,7 @@ public class LanguageOptionsHandler {
                     break;
                 case "neuter":
                     selectedGender = Gender.NEUTER;
+                    break;
                 default:
                     System.out.println("Invalid input");
                     continue;
