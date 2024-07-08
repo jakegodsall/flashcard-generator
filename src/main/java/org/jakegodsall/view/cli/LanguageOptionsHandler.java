@@ -1,9 +1,11 @@
 package org.jakegodsall.view.cli;
 
+import com.fasterxml.jackson.core.JsonToken;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.jakegodsall.models.Language;
+import org.jakegodsall.models.enums.Gender;
 import org.jakegodsall.models.enums.Tense;
 
 import java.io.BufferedReader;
@@ -57,7 +59,6 @@ public class LanguageOptionsHandler {
     }
 
     public Tense getTense(BufferedReader bufferedReader) throws IOException {
-
         System.out.println("Which tense do you want to use?");
         for (Tense tense : selectedLanguage.getTenses()) {
             System.out.println("[" + tense +"]");
@@ -78,7 +79,7 @@ public class LanguageOptionsHandler {
                     selectedTense = Tense.FUTURE;
                     break;
                 default:
-                    System.out.println("Invalid input.");
+                    System.out.println("Invalid input");
                     continue;
             }
             break;
@@ -86,4 +87,31 @@ public class LanguageOptionsHandler {
         return selectedTense;
     }
 
+    public Gender getGender(BufferedReader bufferedReader) throws IOException {
+        System.out.println("Which gender do you want to use?");
+        for (Gender gender : selectedLanguage.getGenders()) {
+            System.out.println("[" + gender + "]");
+        }
+
+        Gender selectedGender = Gender.MASCULINE;
+        String input;
+
+        while(true) {
+            input = bufferedReader.readLine().trim().toLowerCase();
+            switch(input) {
+                case "masculine":
+                    break;
+                case "feminine":
+                    selectedGender = Gender.FEMININE;
+                    break;
+                case "neuter":
+                    selectedGender = Gender.NEUTER;
+                default:
+                    System.out.println("Invalid input");
+                    continue;
+            }
+            break;
+        }
+        return selectedGender;
+    }
 }
