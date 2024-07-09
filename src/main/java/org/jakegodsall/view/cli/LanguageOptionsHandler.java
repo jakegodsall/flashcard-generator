@@ -26,7 +26,7 @@ public class LanguageOptionsHandler {
         Options options = new Options();
         try {
             if (selectedLanguage.isSupportsStress())
-                options.setStress(getStress(br));
+                options.setIsStress(getStress(br));
             options.setTense(getTense(br));
             options.setGender(getGender(br));
         } catch (IOException ioException) {

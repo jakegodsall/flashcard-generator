@@ -10,13 +10,19 @@ import org.jakegodsall.models.enums.Tense;
 @Setter
 @Builder
 public class Options {
-    private boolean isStress;
+    private Boolean isStress;
     private Tense tense;
     private Gender gender;
 
     @Override
     public String toString() {
-        return "Selected Options:\n"
-                + "Stress: ";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Selected Options:");
+        if (isStress != null) {
+            sb.append("\nStress: ").append(isStress);
+        }
+        sb.append("\nTense: ").append(tense.toString().toLowerCase());
+        sb.append("\nGender: ").append(gender.toString().toLowerCase());
+        return sb.toString();
     }
 }
