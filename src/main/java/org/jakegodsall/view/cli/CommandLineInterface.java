@@ -2,6 +2,7 @@ package org.jakegodsall.view.cli;
 
 import org.jakegodsall.config.LanguageConfig;
 import org.jakegodsall.models.Language;
+import org.jakegodsall.models.Options;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.impl.FlashcardServiceGPTImpl;
 
@@ -20,7 +21,7 @@ public class CommandLineInterface {
         Language chosenLanguage = getLanguageFromUser(scanner);
 
         LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage);
-        loh.getOptions();
+        Options selectedOptions = loh.getOptions();
     }
 
     public void printLanguageOptions() {
