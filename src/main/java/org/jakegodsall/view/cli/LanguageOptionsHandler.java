@@ -1,6 +1,7 @@
 package org.jakegodsall.view.cli;
 
 import com.fasterxml.jackson.core.JsonToken;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -16,16 +17,17 @@ import java.io.InputStreamReader;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class LanguageOptionsHandler {
     private final Language selectedLanguage;
-    private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private BufferedReader bufferedReader;
 
     public Options getOptions() throws IOException {
         Options options = new Options();
         if (selectedLanguage.isSupportsStress())
-            options.setIsStress(getStress(br));
-        options.setTense(getTense(br));
-        options.setGender(getGender(br));
+            options.setIsStress(getStress(bufferedReader));
+        options.setTense(getTense(bufferedReader));
+        options.setGender(getGender(bufferedReader));
 
         System.out.println(options);
         return options;

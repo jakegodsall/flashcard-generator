@@ -29,9 +29,9 @@ class LanguageOptionsHandlerTest {
 
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        languageOptionsHandler.setBufferedReader(new BufferedReader(new InputStreamReader(in)));
 
-        assertThat(languageOptionsHandler.getStress(bufferedReader))
+        assertThat(languageOptionsHandler.getStress(languageOptionsHandler.getBufferedReader()))
                 .isTrue();
     }
 
@@ -41,9 +41,9 @@ class LanguageOptionsHandlerTest {
 
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        languageOptionsHandler.setBufferedReader(new BufferedReader(new InputStreamReader(in)));
 
-        assertThat(languageOptionsHandler.getStress(bufferedReader))
+        assertThat(languageOptionsHandler.getStress(languageOptionsHandler.getBufferedReader()))
                 .isTrue();
     }
 
@@ -53,10 +53,9 @@ class LanguageOptionsHandlerTest {
 
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
+        languageOptionsHandler.setBufferedReader(new BufferedReader(new InputStreamReader(in)));
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-
-        assertThat(languageOptionsHandler.getTense(bufferedReader))
+        assertThat(languageOptionsHandler.getTense(languageOptionsHandler.getBufferedReader()))
                 .isEqualTo(Tense.PAST);
     }
 
@@ -66,10 +65,9 @@ class LanguageOptionsHandlerTest {
 
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
+        languageOptionsHandler.setBufferedReader(new BufferedReader(new InputStreamReader(in)));
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-
-        assertThat(languageOptionsHandler.getTense(bufferedReader))
+        assertThat(languageOptionsHandler.getTense(languageOptionsHandler.getBufferedReader()))
                 .isEqualTo(Tense.FUTURE);
     }
 
@@ -79,10 +77,9 @@ class LanguageOptionsHandlerTest {
 
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
+        languageOptionsHandler.setBufferedReader(new BufferedReader(new InputStreamReader(in)));
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-
-        assertThat(languageOptionsHandler.getGender(bufferedReader))
+        assertThat(languageOptionsHandler.getGender(languageOptionsHandler.getBufferedReader()))
                 .isEqualTo(Gender.FEMININE);
     }
 
@@ -92,10 +89,9 @@ class LanguageOptionsHandlerTest {
 
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
+        languageOptionsHandler.setBufferedReader(new BufferedReader(new InputStreamReader(in)));
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-
-        assertThat(languageOptionsHandler.getGender(bufferedReader))
+        assertThat(languageOptionsHandler.getGender(languageOptionsHandler.getBufferedReader()))
                 .isEqualTo(Gender.FEMININE);
     }
 }

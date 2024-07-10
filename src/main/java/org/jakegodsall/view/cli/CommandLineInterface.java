@@ -18,17 +18,17 @@ public class CommandLineInterface {
     Map<String, String> languages = LanguageConfig.getAllLanguageNames();
 
     public void main() {
-        printLanguageOptions();
         try {
             Language chosenLanguage = getLanguageFromUser(bufferedReader);
             LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage);
             Options selectedOptions = loh.getOptions();
+            String word = getWordFromUser(bufferedReader);
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
         }
     }
 
-    public void printLanguageOptions() {
+    private void printLanguageOptions() {
         System.out.println("Languages:");
         for (Map.Entry<String, String> entry : languages.entrySet()) {
             System.out.println("[" + entry.getKey() + "] - " + entry.getValue());
@@ -36,6 +36,7 @@ public class CommandLineInterface {
     }
 
     public Language getLanguageFromUser(BufferedReader bufferedReader) throws IOException {
+        printLanguageOptions();
         boolean validInput = false;
         String input = "";
         while (!validInput) {
@@ -48,5 +49,10 @@ public class CommandLineInterface {
         Language chosenLanguage = LanguageConfig.getLanguage(input);
         System.out.println("Chosen language: " + chosenLanguage);
         return chosenLanguage;
+    }
+
+    private String getWordFromUser(BufferedReader bufferedReader) throws IOException {
+        System.out.println("Enter a word:");
+        return bufferedReader.readLine();
     }
 }
