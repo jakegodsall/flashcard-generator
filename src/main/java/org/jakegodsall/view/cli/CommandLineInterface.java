@@ -10,19 +10,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
-import java.util.Scanner;
 
 public class CommandLineInterface {
     private final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+    private final FlashcardService flashcardService = new FlashcardServiceGPTImpl();
 
     Map<String, String> languages = LanguageConfig.getAllLanguageNames();
 
     public void main() {
         try {
             Language chosenLanguage = getLanguageFromUser(bufferedReader);
-            LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage);
+            LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage, bufferedReader);
             Options selectedOptions = loh.getOptions();
             String word = getWordFromUser(bufferedReader);
+
+            String sentence = flashcardService.getSentence(word, chosenLanguage, selectedOptions);
+            System.out.println(sentence);
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
         }
