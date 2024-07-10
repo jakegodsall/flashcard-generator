@@ -6,8 +6,8 @@ import org.jakegodsall.view.cli.CommandLineInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.Buffer;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -25,29 +25,29 @@ class CommandLineInterfaceTest {
     }
 
     @Test
-    void getLanguageFromUser_correctInputLowerCase() {
+    void getLanguageFromUser_correctInputLowerCase() throws IOException {
         String input = "ru";
         Language validLanguage = languages.get(input);
 
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
-        Scanner scanner = new Scanner(System.in);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
-        Language result = commandLineInterface.getLanguageFromUser(scanner);
+        Language result = commandLineInterface.getLanguageFromUser(bufferedReader);
 
         assertThat(result).isEqualTo(validLanguage);
     }
 
     @Test
-    void getLanguageFromUser_correctInputUpperCase() {
+    void getLanguageFromUser_correctInputUpperCase() throws IOException {
         String input = "RU";
         Language validLanguage = languages.get(input);
 
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
-        Scanner scanner = new Scanner(System.in);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-        Language result = commandLineInterface.getLanguageFromUser(scanner);
+        Language result = commandLineInterface.getLanguageFromUser(bufferedReader);
 
         assertThat(result).isEqualTo(validLanguage);
     }

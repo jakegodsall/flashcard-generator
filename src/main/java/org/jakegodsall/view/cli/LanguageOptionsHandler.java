@@ -20,17 +20,13 @@ public class LanguageOptionsHandler {
     private final Language selectedLanguage;
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    public Options getOptions() {
+    public Options getOptions() throws IOException {
         Options options = new Options();
-        try {
-            if (selectedLanguage.isSupportsStress())
-                options.setIsStress(getStress(br));
-            options.setTense(getTense(br));
-            options.setGender(getGender(br));
-        } catch (IOException ioException) {
-            System.out.println("exception");
-            System.err.println("Error reading input: " + ioException.getMessage());
-        }
+        if (selectedLanguage.isSupportsStress())
+            options.setIsStress(getStress(br));
+        options.setTense(getTense(br));
+        options.setGender(getGender(br));
+
         System.out.println(options);
         return options;
     }

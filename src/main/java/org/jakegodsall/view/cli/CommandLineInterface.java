@@ -6,22 +6,26 @@ import org.jakegodsall.models.Options;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.impl.FlashcardServiceGPTImpl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Scanner;
 
 public class CommandLineInterface {
-    private final Scanner scanner = new Scanner(System.in);
+    private final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
     Map<String, String> languages = LanguageConfig.getAllLanguageNames();
 
     public void main() {
         printLanguageOptions();
-
-        Language chosenLanguage = getLanguageFromUser(scanner);
-
-        LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage);
-        Options selectedOptions = loh.getOptions();
+        try {
+            Language chosenLanguage = getLanguageFromUser(bufferedReader);
+            LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage);
+            Options selectedOptions = loh.getOptions();
+        } catch (IOException ioException) {
+            System.err.println(ioException.getMessage());
+        }
     }
 
     public void printLanguageOptions() {
@@ -31,12 +35,12 @@ public class CommandLineInterface {
         }
     }
 
-    public Language getLanguageFromUser(Scanner scanner) {
+    public Language getLanguageFromUser(BufferedReader bufferedReader) throws IOException {
         boolean validInput = false;
         String input = "";
         while (!validInput) {
             System.out.println("Choose the desired language from the following list (use codes):");
-            input = scanner.nextLine();
+            input = bufferedReader.readLine();
             if (languages.containsKey(input.toLowerCase().trim())) {
                 validInput = true;
             }
