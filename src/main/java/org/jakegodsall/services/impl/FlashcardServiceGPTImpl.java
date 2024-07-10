@@ -1,9 +1,11 @@
 package org.jakegodsall.services.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class FlashcardServiceGPTImpl implements FlashcardService {
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
@@ -43,11 +46,10 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
         System.out.println(json);
 
         HttpResponse response = httpClient.execute(request);
-        String responseBody = EntityUtils.toString(response.getEntity());
-        System.out.println(responseBody);
+        String sentence = parseSentenceFromHttpResponse(response);
 
         httpClient.close();
-        return responseBody;
+        return sentence;
     }
 
     public String generateRequestBody(String prompt) throws JsonProcessingException {
@@ -81,5 +83,24 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
         sb.append("\nGrammatical tense").append(options.getTense());
 
         return sb.toString();
+    }
+
+    public String parseSentenceFromHttpResponse(HttpResponse response) throws IOException {
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            String result = EntityUtils.toString(entity);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(result);
+
+            JsonNode sentenceField = rootNode
+                    .path("choices")
+                    .get(0)
+                    .path("message")
+                    .path("content");
+            return sentenceField.toString();
+        } else {
+            throw new NoSuchElementException();
+        }
     }
 }
