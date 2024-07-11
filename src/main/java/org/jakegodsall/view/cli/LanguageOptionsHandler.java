@@ -65,10 +65,9 @@ public class LanguageOptionsHandler {
         Map<String, Tense> tenseMap = TenseUtils.getTenseMap(selectedLanguage.getTenses());
 
         System.out.println("Which tense do you want to use?");
-        for (String tenseName : tenseMap.keySet()) {
-            System.out.println("[" + tenseName +"]");
-        }
+        TenseUtils.printTenses(selectedLanguage.getTenses());
 
+        System.out.println(tenseMap);
         Tense selectedTense = Tense.PRESENT;
 
         String input;
@@ -79,9 +78,7 @@ public class LanguageOptionsHandler {
                 break;
             } else {
                 System.out.println("Invalid input. Please enter one of the following");
-                for (String tenseName : tenseMap.keySet()) {
-                    System.out.println("[" + tenseName +"]");
-                }
+                TenseUtils.printTenses(selectedLanguage.getTenses());
             }
         }
         return selectedTense;

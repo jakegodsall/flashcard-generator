@@ -11,9 +11,14 @@ public class TenseUtils {
     public static Map<String, Tense> getTenseMap(List<Tense> tenses) {
         Map<String, Tense> tenseMap = new HashMap<>();
         for (Tense tense : tenses) {
-            String name = StringUtils.capitalizeFirstLetter(tense.name());
-            tenseMap.put(name, tense);
+            tenseMap.put(tense.name().toLowerCase(), tense);
         }
         return tenseMap;
+    }
+
+    public static void printTenses(List<Tense> tenses) {
+        for (Tense tense : tenses) {
+            System.out.println("[" + StringUtils.capitalizeFirstLetter(tense.name()) + "]");
+        }
     }
 }
