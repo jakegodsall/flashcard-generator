@@ -39,11 +39,9 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
         request.setHeader("Content-Type", "application/json; charset=UTF-8");
 
         String json = generateRequestBody(generatePrompt(word, language, options));
-
         StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
-        request.setEntity(entity);
 
-        System.out.println(json);
+        request.setEntity(entity);
 
         HttpResponse response = httpClient.execute(request);
         String sentence = parseSentenceFromHttpResponse(response);

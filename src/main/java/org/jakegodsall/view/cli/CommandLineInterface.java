@@ -12,13 +12,12 @@ import java.io.InputStreamReader;
 import java.util.Map;
 
 public class CommandLineInterface {
-    private final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     private final FlashcardService flashcardService = new FlashcardServiceGPTImpl();
 
     Map<String, String> languages = LanguageConfig.getAllLanguageNames();
 
     public void main() {
-        try {
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))){
             Language chosenLanguage = getLanguageFromUser(bufferedReader);
             LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage, bufferedReader);
             Options selectedOptions = loh.getOptions();
