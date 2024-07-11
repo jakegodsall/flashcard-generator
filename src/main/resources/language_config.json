@@ -14,7 +14,11 @@
   "es": {
     "name": "Spanish",
     "supports_stress": false,
-    "tenses": ["PAST", "PRESENT", "FUTURE"],
+    "tenses": [
+      "PAST_SIMPLE", "PAST_PROGRESSIVE", "PAST_PERFECT",
+      "PRESENT_SIMPLE", "PRESENT_PERFECT",
+      "FUTURE", "FUTURE_PERFECT",
+      "CONDITIONAL", "CONDITIONAL_PERFECT"],
     "genders": ["MASCULINE", "FEMININE"]
   }
 }
