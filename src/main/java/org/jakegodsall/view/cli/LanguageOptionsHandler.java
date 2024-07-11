@@ -9,6 +9,7 @@ import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
 import org.jakegodsall.models.enums.Gender;
 import org.jakegodsall.models.enums.Tense;
+import org.jakegodsall.utils.TenseUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -61,11 +62,7 @@ public class LanguageOptionsHandler {
     }
 
     public Tense getTense(BufferedReader bufferedReader) throws IOException {
-        Map<String, Tense> tenseMap = new HashMap<>();
-        for (Tense tense : Tense.values()) {
-            String tenseName = tense.name().toLowerCase();
-            tenseMap.put(tenseName, tense);
-        }
+        Map<String, Tense> tenseMap = TenseUtils.getTenseMap(selectedLanguage.getTenses());
 
         System.out.println("Which tense do you want to use?");
         for (String tenseName : tenseMap.keySet()) {
