@@ -21,10 +21,12 @@ public class CommandLineInterface {
             Language chosenLanguage = getLanguageFromUser(bufferedReader);
             LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage, bufferedReader);
             Options selectedOptions = loh.getOptions();
-            String word = getWordFromUser(bufferedReader);
 
-            String sentence = flashcardService.getSentence(word, chosenLanguage, selectedOptions);
-            System.out.println(sentence);
+            String word;
+            while (!(word = getWordFromUser(bufferedReader)).equals("-1")) {
+                String sentence  = flashcardService.getSentence(word, chosenLanguage, selectedOptions);
+                System.out.println(sentence);
+            }
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
         }
