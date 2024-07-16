@@ -2,13 +2,11 @@ package org.jakegodsall.view.cli;
 
 import org.jakegodsall.config.LanguageConfig;
 import org.jakegodsall.models.Language;
-import org.jakegodsall.models.Options;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.impl.FlashcardServiceGPTImpl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Map;
 
 public class CommandLineInterface {
@@ -17,19 +15,20 @@ public class CommandLineInterface {
     Map<String, String> languages = LanguageConfig.getAllLanguageNames();
 
     public void main() {
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))){
-            Language chosenLanguage = getLanguageFromUser(bufferedReader);
-            LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage, bufferedReader);
-            Options selectedOptions = loh.getOptions();
-
-            String word;
-            while (!(word = getWordFromUser(bufferedReader)).equals("-1")) {
-                String sentence  = flashcardService.getSentence(word, chosenLanguage, selectedOptions);
-                System.out.println(sentence);
-            }
-        } catch (IOException ioException) {
-            System.err.println(ioException.getMessage());
-        }
+//        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))){
+//            Language chosenLanguage = getLanguageFromUser(bufferedReader);
+//            LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage, bufferedReader);
+//            Options selectedOptions = loh.getOptions();
+//
+//            String word;
+//            while (!(word = getWordFromUser(bufferedReader)).equals("-1")) {
+//                String sentence  = flashcardService.getSentence(word, chosenLanguage, selectedOptions);
+//                System.out.println(sentence);
+//            }
+//        } catch (IOException ioException) {
+//            System.err.println(ioException.getMessage());
+//        }
+        flashcardService.getAvailableModels();
     }
 
     private void printLanguageOptions() {

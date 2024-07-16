@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -19,19 +20,43 @@ import org.jakegodsall.services.FlashcardService;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FlashcardServiceGPTImpl implements FlashcardService {
-    private static final String API_URL = "https://api.openai.com/v1/chat/completions";
+    private static final String API_MODELS_URL = "https://api.openai.com/v1/models";
+    private static final String API_CHAT_URL = "https://api.openai.com/v1/chat/completions";
 
     private static final Logger logger = Logger.getLogger(HttpResponseParser.class.getName());
 
     @Override
+    public List<String> getAvailableModels() {
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpGet request = new HttpGet(API_MODELS_URL);
+            String bearerToken = System.getenv("OPENAI_API_KEY");
+
+            request.setHeader("Authorization", "Bearer " + bearerToken);
+            request.setHeader("Accept", "application/json");
+            request.setHeader("Content-Type", "application/json; charset=UTF-8");
+
+            HttpResponse response = httpClient.execute(request);
+
+            List<String> models = parseModelsFromHttpResponse(response);
+            System.out.println(models);
+        } catch (IOException ioException) {
+            System.err.println(ioException.getMessage());
+        }
+        return List.of();
+    }
+
+    @Override
     public String getSentence(String word, Language language, Options options) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost request = new HttpPost(API_URL);
+        HttpPost request = new HttpPost(API_CHAT_URL);
 
         String bearerToken = System.getenv("OPENAI_API_KEY");
 
@@ -84,6 +109,52 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
         return sb.toString();
     }
 
+    public List<String> parseModelsFromHttpResponse(HttpResponse response) throws IOException {
+        if (response == null) {
+            logger.log(Level.SEVERE, "HttpResponse is null");
+            throw new IllegalArgumentException("HttpResponse is null");
+        }
+
+        HttpEntity entity = response.getEntity();
+        if (entity == null) {
+            logger.log(Level.SEVERE, "HttpEntity is null");
+            throw new NoSuchElementException("HttpEntity is null");
+        }
+
+        String result = EntityUtils.toString(entity);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        JsonNode rootNode;
+
+        try {
+            rootNode = objectMapper.readTree(result);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "Error parsing JSON response");
+            throw new IOException("Error parsing JSON response", ex);
+        }
+
+        List<String> models = new ArrayList<>();
+
+        JsonNode dataNode = rootNode.path("data");
+        if (dataNode.isArray()) {
+            ArrayNode arrayNode = (ArrayNode) dataNode;
+            Iterator<JsonNode> elements = arrayNode.elements();
+            while (elements.hasNext()) {
+                String modelName = elements.next().path("id").asText();
+                if (modelName.isEmpty()) {
+                    continue;
+                }
+                models.add(modelName);
+            }
+        } else {
+            logger.log(Level.SEVERE, "Missing 'data' field in the JSON response");
+            throw new NoSuchElementException("Missing 'data' field in the JSON response");
+        }
+
+        return models;
+    }
+
     public String parseSentenceFromHttpResponse(HttpResponse response) throws IOException {
         if (response == null) {
             logger.log(Level.SEVERE, "HttpResponse is null");
@@ -92,15 +163,15 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
 
         HttpEntity entity = response.getEntity();
         if (entity == null) {
-            logger.log(Level.SEVERE, "httpEntity is null");
+            logger.log(Level.SEVERE, "HttpEntity is null");
             throw new NoSuchElementException("HttpEntity is null");
         }
 
         String result = EntityUtils.toString(entity);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode;
 
+        JsonNode rootNode;
         try {
             rootNode = objectMapper.readTree(result);
         } catch (IOException ex) {
