@@ -35,6 +35,7 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
 
     @Override
     public List<String> getAvailableModels() {
+        List<String> models = new ArrayList<>();
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpGet request = new HttpGet(API_MODELS_URL);
             String bearerToken = System.getenv("OPENAI_API_KEY");
@@ -45,34 +46,35 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
 
             HttpResponse response = httpClient.execute(request);
 
-            List<String> models = parseModelsFromHttpResponse(response);
-            System.out.println(models);
+            models = parseModelsFromHttpResponse(response);
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
         }
-        return List.of();
+        return models;
     }
 
     @Override
-    public String getSentence(String word, Language language, Options options) throws IOException {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost request = new HttpPost(API_CHAT_URL);
+    public String getSentence(String word, Language language, Options options) {
+        String sentence = "";
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpPost request = new HttpPost(API_CHAT_URL);
 
-        String bearerToken = System.getenv("OPENAI_API_KEY");
+            String bearerToken = System.getenv("OPENAI_API_KEY");
 
-        request.setHeader("Authorization", "Bearer " + bearerToken);
-        request.setHeader("Accept", "application/json");
-        request.setHeader("Content-Type", "application/json; charset=UTF-8");
+            request.setHeader("Authorization", "Bearer " + bearerToken);
+            request.setHeader("Accept", "application/json");
+            request.setHeader("Content-Type", "application/json; charset=UTF-8");
 
-        String json = generateRequestBody(generatePrompt(word, language, options));
-        StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
+            String json = generateRequestBody(generatePrompt(word, language, options));
+            StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
 
-        request.setEntity(entity);
+            request.setEntity(entity);
 
-        HttpResponse response = httpClient.execute(request);
-        String sentence = parseSentenceFromHttpResponse(response);
-
-        httpClient.close();
+            HttpResponse response = httpClient.execute(request);
+            sentence = parseSentenceFromHttpResponse(response);
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
         return sentence;
     }
 
