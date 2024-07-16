@@ -7,12 +7,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.io.HttpResponseParser;
 import org.apache.http.util.EntityUtils;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
@@ -20,12 +19,14 @@ import org.jakegodsall.services.FlashcardService;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FlashcardServiceGPTImpl implements FlashcardService {
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
+
+    private static final Logger logger = Logger.getLogger(HttpResponseParser.class.getName());
 
     @Override
     public String getSentence(String word, Language language, Options options) throws IOException {
@@ -84,21 +85,47 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     }
 
     public String parseSentenceFromHttpResponse(HttpResponse response) throws IOException {
-        HttpEntity entity = response.getEntity();
-        if (entity != null) {
-            String result = EntityUtils.toString(entity);
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(result);
-
-            JsonNode sentenceField = rootNode
-                    .path("choices")
-                    .get(0)
-                    .path("message")
-                    .path("content");
-            return sentenceField.toString();
-        } else {
-            throw new NoSuchElementException();
+        if (response == null) {
+            logger.log(Level.SEVERE, "HttpResponse is null");
+            throw new IllegalArgumentException("HttpResponse cannot be null");
         }
+
+        HttpEntity entity = response.getEntity();
+        if (entity == null) {
+            logger.log(Level.SEVERE, "httpEntity is null");
+            throw new NoSuchElementException("HttpEntity is null");
+        }
+
+        String result = EntityUtils.toString(entity);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode;
+
+        try {
+            rootNode = objectMapper.readTree(result);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "Error parsing JSON response");
+            throw new IOException("Error parsing JSON response", ex);
+        }
+
+        JsonNode choicesNode = rootNode.path("choices");
+        if (!choicesNode.isArray() || choicesNode.isEmpty()) {
+            logger.log(Level.SEVERE, "Missing or empty 'choices' field in the JSON response");
+            throw new NoSuchElementException("Missing or empty 'choices' field in the JSON response");
+        }
+
+        JsonNode messageNode = choicesNode.get(0).path("message");
+        if (messageNode.isMissingNode()) {
+            logger.log(Level.SEVERE, "Missing 'message' field in the JSON response");
+            throw new NoSuchElementException("Missing 'message' field in the JSON response");
+        }
+
+        JsonNode contentNode = messageNode.path("content");
+        if (contentNode.isMissingNode()) {
+            logger.log(Level.SEVERE, "Missing 'content' field in the JSON response");
+            throw new NoSuchElementException("Missing 'content' field in the JSON response");
+        }
+
+        return contentNode.toString();
     }
 }
