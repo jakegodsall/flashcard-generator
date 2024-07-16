@@ -1,5 +1,5 @@
 package org.jakegodsall.models.enums;
 
-public enum Genders {
+public enum Gender {
     MASCULINE, FEMININE, NEUTER
 }
