@@ -81,6 +81,17 @@
             <artifactId>httpclient</artifactId>
             <version>${apache.httpclient.version}</version>
         </dependency>
+        <!-- JavaFX -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>22-ea+11</version>
+        </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+
+        </plugins>
+    </build>
 </project>
