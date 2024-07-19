@@ -11,7 +11,7 @@ public class ApiKeyConfig {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static String getApiKey() {
+    public static String getApiKeyFromJsonFile() {
         try (InputStream inputStream = ApiKeyConfig.class.getResourceAsStream(CONFIG_FILE)) {
             if (inputStream == null)
                 throw new IOException("Configuration file ("
@@ -26,5 +26,9 @@ public class ApiKeyConfig {
             System.err.println(ex.getMessage());
         }
         return "";
+    }
+
+    public static void setApiKeyInJsonFile(String apiKey) {
+        if ()
     }
 }

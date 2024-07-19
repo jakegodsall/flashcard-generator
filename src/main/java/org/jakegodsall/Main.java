@@ -11,6 +11,6 @@ public class Main {
 //        cli.main();
 //        Application.launch(GuiInterface.class, args);
 
-        System.out.println(ApiKeyConfig.getApiKey());
+        System.out.println(ApiKeyConfig.getApiKeyFromJsonFile());
     }
 }
