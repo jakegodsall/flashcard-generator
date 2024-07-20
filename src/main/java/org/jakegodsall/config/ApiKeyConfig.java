@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jakegodsall.exceptions.ApiKeyNotFoundException;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 
 public class ApiKeyConfig {
     public static final String CONFIG_FILE = "/api_config.json";
@@ -13,28 +12,35 @@ public class ApiKeyConfig {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static String getApiKeyFromJsonFile() throws Exception {
+    public static String getApiKeyFromJsonFile() {
         // get API file
-        InputStream inputStream = getResourceAsStream(CONFIG_FILE);
-        if (inputStream == null)
+        try (InputStream inputStream = getFileStream(CONFIG_FILE)) {
+            // Navigate API file
+            JsonNode rootNode = objectMapper.readTree(inputStream);
+            System.out.println("Root Node: " + rootNode);
+            JsonNode apiKey = rootNode.path("apiKey");
+
+            // Check to see if field exists
+            if (apiKey.isMissingNode() || !apiKey.isValueNode())
+                throw new ApiKeyNotFoundException("API key not found");
+
+            // Return the API key
+            return apiKey.asText();
+        } catch (ApiKeyNotFoundException | IOException exception) {
+            System.err.println(exception.getMessage());
+        }
+        return "";
+    }
+
+
+    public static void setApiKeyInJsonFile (String apiKey) {
+    }
+
+
+    public static InputStream getFileStream(String fileName) throws FileNotFoundException {
+        File file = new File(fileName);
+        if (!file.exists())
             throw new FileNotFoundException("API file does not exist");
-
-        // Navigate API file
-        JsonNode rootNode = objectMapper.readTree(inputStream);
-        JsonNode apiKey = rootNode.path("apiKey");
-
-        // Check to see if field exists
-        if (apiKey.isMissingNode() || apiKey.isValueNode())
-            throw new ApiKeyNotFoundException("API key not found");
-
-        // Return the API key
-        return apiKey.asText();
-    }
-
-    public static void setApiKeyInJsonFile(String apiKey) {
-    }
-
-    public static InputStream getResourceAsStream(String fileName) {
-        return ApiKeyConfig.class.getResourceAsStream(fileName);
+        return new FileInputStream(file);
     }
 }
