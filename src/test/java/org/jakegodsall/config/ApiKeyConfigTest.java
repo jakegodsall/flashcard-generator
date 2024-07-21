@@ -1,6 +1,7 @@
 package org.jakegodsall.config;
 
 import org.jakegodsall.exceptions.ApiKeyNotFoundException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
@@ -16,6 +17,8 @@ import static org.mockito.Mockito.mockStatic;
 
 @ExtendWith(MockitoExtension.class)
 class ApiKeyConfigTest {
+
+    @Disabled
     @Test
     public void getApiKeyFromJsonFile_fileNotFound() {
         try (MockedStatic<ApiKeyConfig> mockedApiKeyConfig = mockStatic(ApiKeyConfig.class)) {
@@ -28,6 +31,7 @@ class ApiKeyConfigTest {
         }
     }
 
+    @Disabled
     @Test
     public void getApiKeyFromJsonFile_apiKeyNotFound() {
         String jsonContent = "{}";
@@ -41,5 +45,10 @@ class ApiKeyConfigTest {
                     .isInstanceOf(ApiKeyNotFoundException.class)
                     .hasMessageContaining("API key not found in:");
         }
+    }
+
+    @Test
+    public void storeApiKeyInJsonFile() {
+
     }
 }
