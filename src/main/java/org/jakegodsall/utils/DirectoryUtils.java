@@ -31,4 +31,15 @@ public class DirectoryUtils {
             logger.log(Level.INFO, "Hidden directory already exists at: " + hiddenDir.getAbsolutePath());
         }
     }
+
+    /**
+     * Tests whether the configuration directory already exists.
+     *
+     * @param configDir The path to the configuration directory.
+     * @return a boolean representing whether the directory exists or not.
+     */
+    public static boolean hiddenConfigDirectoryExists(String configDir) {
+        File hiddenDir = new File(configDir);
+        return hiddenDir.exists();
+    }
 }
