@@ -3,6 +3,7 @@ package org.jakegodsall.config;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jakegodsall.exceptions.ApiKeyNotFoundException;
+import org.jakegodsall.utils.DirectoryUtils;
 
 import java.io.*;
 import java.util.logging.Logger;
@@ -15,7 +16,7 @@ public class ApiKeyConfig {
     /**
      * File name of the file containing the API key.
      */
-    public static final String CONFIG_FILE = "/api_config.json";
+    public static final String CONFIG_FILE_NAME = "api_config.json";
 
     /**
      * Directory for the configuration file, defaulting to the user's home directory.
@@ -32,7 +33,7 @@ public class ApiKeyConfig {
      */
     public static String getApiKeyFromJsonFile() {
         // get API file
-        try (InputStream inputStream = getFileStream(CONFIG_FILE)) {
+        try (InputStream inputStream = getFileStream(CONFIG_FILE_NAME)) {
             // Navigate API file
             JsonNode rootNode = objectMapper.readTree(inputStream);
             System.out.println("Root Node: " + rootNode);
@@ -55,14 +56,17 @@ public class ApiKeyConfig {
      *
      * @param apiKey the key to store in the configuration file.
      */
-    public static void storeApiKeyInJsonFile(String apiKey) {
+    public static void storeApiKeyInJsonFile(String apiKey, String configDir) throws IOException {
         // Check to see if the directory already exists
-
-        // if it doesn't exist, create it
-
+        if (!DirectoryUtils.hiddenConfigDirectoryExists(configDir)) {
+            // if it doesn't exist, create it
+            DirectoryUtils.createHiddenConfigDirectory(configDir);
+        }
         // put the key into a file
-
-        // save the file in the directory
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(configDir + "/" + CONFIG_FILE_NAME))) {
+            String formattedLine = "{\"apiKey\":\"" + apiKey + "\"}";
+            bw.write(formattedLine);
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package org.jakegodsall.config;
 
 import org.jakegodsall.exceptions.ApiKeyNotFoundException;
+import org.jakegodsall.utils.DirectoryUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -11,9 +12,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mockStatic;
 
 @ExtendWith(MockitoExtension.class)
 class ApiKeyConfigTest {
@@ -21,14 +23,13 @@ class ApiKeyConfigTest {
     @TempDir
     File tempDir;
 
-    File mockedFile;
-
-    FileWriter mockedFileWriter;
+    private File configDir;
+    private File configFile;
 
     @BeforeEach
     void setUp() {
-        mockedFile = mock(File.class);
-        mockedFileWriter = mock(FileWriter.class);
+        configDir = new File(tempDir, ".flashcard-generator");
+        configFile = new File(configDir, ApiKeyConfig.CONFIG_FILE_NAME);
     }
 
     @Disabled
@@ -61,41 +62,61 @@ class ApiKeyConfigTest {
     }
 
     @Test
-    public void storeApiKeyInJsonFile_directoryExists() throws IOException {
+    void testStoreApiKeyInJsonFile_directoryExists() throws IOException {
         String testApiKey ="testApiKey";
 
-        // Setup mocks
-        when(mockedFile.exists()).thenReturn(true);
-        when(mockedFile.isDirectory()).thenReturn(true);
-        when(mockedFile.getAbsolutePath()).thenReturn(tempDir.getAbsolutePath());
+        // Create the directory before making call to method under test
+        DirectoryUtils.createHiddenConfigDirectory(configDir.toString());
 
         // Call the method
-        ApiKeyConfig.storeApiKeyInJsonFile(testApiKey);
+        ApiKeyConfig.storeApiKeyInJsonFile(testApiKey, configDir.toString());
 
         // Verify
-        verify(mockedFile, times(1)).exists();
-        verify(mockedFile, never()).mkdir();
-        verify(mockedFileWriter, times(1)).write("{\"apiKey\":\"testApiKey\"}");
-        verify(mockedFileWriter, times(1)).close();
+        assertThat(configDir.exists()).isTrue();
+        assertThat(configDir.isDirectory()).isTrue();
+
+        // Verify file contents
+        try (BufferedReader br = new BufferedReader(new FileReader(configFile))) {
+            String line = br.readLine();
+            assertThat(line).isEqualTo("{\"apiKey\":\"testApiKey\"}");
+        }
     }
 
     @Test
-    void testStoreApiKeyInJsonFile_directoryDoesNotExist() throws IOException {
+    public void storeApiKeyInJsonFile_directoryDoesNotExist() throws IOException {
         String testApiKey ="testApiKey";
 
-        // Setup mocks
-        when(mockedFile.exists()).thenReturn(false);
-        when(mockedFile.mkdir()).thenReturn(true);
-        when(mockedFile.isDirectory()).thenReturn(true);
-        when(mockedFile.getAbsolutePath()).thenReturn(tempDir.getAbsolutePath());
+        // Call the method
+        ApiKeyConfig.storeApiKeyInJsonFile(testApiKey, configDir.toString());
 
-        // Call the method under test
-        ApiKeyConfig.storeApiKeyInJsonFile(testApiKey);
+        // Verify
+        assertThat(configDir.exists()).isTrue();
+        assertThat(configDir.isDirectory()).isTrue();
 
-        // Verify interactions
-        verify(mockedFile, times(1)).exists();
-        verify(mockedFile, times(1)).mkdir();
-        verify(mockedFileWriter, times(1)).write("{\"apiKey\":\"testApiKey\"}");
-        verify(mockedFileWriter, times(1)).close();
+        // Verify file contents
+        try (BufferedReader br = new BufferedReader(new FileReader(configFile))) {
+            String line = br.readLine();
+            assertThat(line).isEqualTo("{\"apiKey\":\"testApiKey\"}");
+        }
     }
+
+    @Test
+    public void storeApiKeyInJsonFile_directoryExists_KeyInvalid() throws IOException {
+        String testApiKey ="testApiKey";
+
+        // Call the method
+        ApiKeyConfig.storeApiKeyInJsonFile(testApiKey, configDir.toString());
+
+        // Verify
+        assertThat(configDir.exists()).isTrue();
+        assertThat(configDir.isDirectory()).isTrue();
+
+        // Verify file contents
+        try (BufferedReader br = new BufferedReader(new FileReader(configFile))) {
+            String line = br.readLine();
+            assertThat(line).isNotEqualTo("{\"apiKey\":\"invalidKey\"}");
+        }
+    }
+
+
 }
