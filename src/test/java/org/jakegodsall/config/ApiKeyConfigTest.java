@@ -1,22 +1,35 @@
 package org.jakegodsall.config;
 
 import org.jakegodsall.exceptions.ApiKeyNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ApiKeyConfigTest {
+
+    @TempDir
+    File tempDir;
+
+    File mockedFile;
+
+    FileWriter mockedFileWriter;
+
+    @BeforeEach
+    void setUp() {
+        mockedFile = mock(File.class);
+        mockedFileWriter = mock(FileWriter.class);
+    }
 
     @Disabled
     @Test
@@ -48,7 +61,41 @@ class ApiKeyConfigTest {
     }
 
     @Test
-    public void storeApiKeyInJsonFile() {
+    public void storeApiKeyInJsonFile_directoryExists() throws IOException {
+        String testApiKey ="testApiKey";
 
+        // Setup mocks
+        when(mockedFile.exists()).thenReturn(true);
+        when(mockedFile.isDirectory()).thenReturn(true);
+        when(mockedFile.getAbsolutePath()).thenReturn(tempDir.getAbsolutePath());
+
+        // Call the method
+        ApiKeyConfig.storeApiKeyInJsonFile(testApiKey);
+
+        // Verify
+        verify(mockedFile, times(1)).exists();
+        verify(mockedFile, never()).mkdir();
+        verify(mockedFileWriter, times(1)).write("{\"apiKey\":\"testApiKey\"}");
+        verify(mockedFileWriter, times(1)).close();
+    }
+
+    @Test
+    void testStoreApiKeyInJsonFile_directoryDoesNotExist() throws IOException {
+        String testApiKey ="testApiKey";
+
+        // Setup mocks
+        when(mockedFile.exists()).thenReturn(false);
+        when(mockedFile.mkdir()).thenReturn(true);
+        when(mockedFile.isDirectory()).thenReturn(true);
+        when(mockedFile.getAbsolutePath()).thenReturn(tempDir.getAbsolutePath());
+
+        // Call the method under test
+        ApiKeyConfig.storeApiKeyInJsonFile(testApiKey);
+
+        // Verify interactions
+        verify(mockedFile, times(1)).exists();
+        verify(mockedFile, times(1)).mkdir();
+        verify(mockedFileWriter, times(1)).write("{\"apiKey\":\"testApiKey\"}");
+        verify(mockedFileWriter, times(1)).close();
     }
 }
