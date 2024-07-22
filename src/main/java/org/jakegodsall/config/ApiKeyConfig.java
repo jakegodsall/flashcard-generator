@@ -6,6 +6,7 @@ import org.jakegodsall.exceptions.ApiKeyNotFoundException;
 import org.jakegodsall.utils.DirectoryUtils;
 
 import java.io.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -31,24 +32,22 @@ public class ApiKeyConfig {
      *
      * @return the API key as a String, or an empty string if the key is not found or an error occurs.
      */
-    public static String getApiKeyFromJsonFile() {
+    public static String getApiKeyFromJsonFile(String configDir) throws ApiKeyNotFoundException, IOException {
         // get API file
-        try (InputStream inputStream = getFileStream(CONFIG_FILE_NAME)) {
+        try (InputStream inputStream = getFileStream(configDir + "/" + CONFIG_FILE_NAME)) {
             // Navigate API file
             JsonNode rootNode = objectMapper.readTree(inputStream);
-            System.out.println("Root Node: " + rootNode);
             JsonNode apiKey = rootNode.path("apiKey");
 
             // Check to see if field exists
-            if (apiKey.isMissingNode() || !apiKey.isValueNode())
-                throw new ApiKeyNotFoundException("API key not found");
+            if (apiKey.isMissingNode() || !apiKey.isValueNode()) {
+                logger.log(Level.SEVERE, "API key not found in the file");
+                throw new ApiKeyNotFoundException("API key not found in the file");
+            }
 
             // Return the API key
             return apiKey.asText();
-        } catch (ApiKeyNotFoundException | IOException exception) {
-            System.err.println(exception.getMessage());
         }
-        return "";
     }
 
     /**

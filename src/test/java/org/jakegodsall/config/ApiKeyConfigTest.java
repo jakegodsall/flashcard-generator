@@ -1,21 +1,19 @@
 package org.jakegodsall.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jakegodsall.exceptions.ApiKeyNotFoundException;
 import org.jakegodsall.utils.DirectoryUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.MockedStatic;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mockStatic;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class ApiKeyConfigTest {
@@ -26,43 +24,86 @@ class ApiKeyConfigTest {
     private File configDir;
     private File configFile;
 
+    @Mock
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @BeforeEach
     void setUp() {
-        configDir = new File(tempDir, ".flashcard-generator");
-        configFile = new File(configDir, ApiKeyConfig.CONFIG_FILE_NAME);
+        configDir = new File(tempDir, ".flashcard-generator"); // temp-dir/.flashcard-generator/
+        configFile = new File(configDir, ApiKeyConfig.CONFIG_FILE_NAME); // temp-dir/.flashcard-generator/api_config.json
     }
 
-    @Disabled
+    @Test
+    public void getApiKeyFromJsonFile_success() throws Exception {
+        // Define a test API key
+        String testApiKey = "123456";
+
+        // Create the temp-dir/.flashcard-generator/ directory
+        if (!configDir.exists())
+            configDir.mkdirs();
+
+        assertThat(configDir.isDirectory()).isTrue();
+        assertThat(configDir.isHidden()).isTrue();
+
+
+        // Create the temporary config file and write the API key
+        try (BufferedWriter br = new BufferedWriter(new FileWriter(configFile))) {
+            br.write("{\"apiKey\": \"" + testApiKey + "\"}");
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to write to the config file", ex);
+        }
+
+        String actualApiKey = ApiKeyConfig.getApiKeyFromJsonFile(configDir.toString());
+
+        assertThat(configFile.exists()).isTrue();
+        assertThat(actualApiKey).isEqualTo(testApiKey);
+    }
+
     @Test
     public void getApiKeyFromJsonFile_fileNotFound() {
-        try (MockedStatic<ApiKeyConfig> mockedApiKeyConfig = mockStatic(ApiKeyConfig.class)) {
-            mockedApiKeyConfig.when(() -> ApiKeyConfig.getFileStream(anyString()))
-                    .thenReturn(null);
+        // Create the temp-dir/.flashcard-generator/ directory
+        if (!configDir.exists())
+            configDir.mkdirs();
 
-            assertThatThrownBy(ApiKeyConfig::getApiKeyFromJsonFile)
-                    .isInstanceOf(FileNotFoundException.class)
-                    .hasMessageContaining("API file does not exist");
-        }
+        assertThat(configDir.isDirectory()).isTrue();
+        assertThat(configDir.isHidden()).isTrue();
+        assertThat(configFile.exists()).isFalse();
+
+        Exception exception = assertThrows(FileNotFoundException.class, () -> {
+            ApiKeyConfig.getApiKeyFromJsonFile(configDir.toString());
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("API file does not exist");
     }
 
-    @Disabled
     @Test
-    public void getApiKeyFromJsonFile_apiKeyNotFound() {
+    public void getApiKeyFromJsonFile_apiKeyNotFound() throws Exception {
         String jsonContent = "{}";
-        InputStream inputStream = new ByteArrayInputStream(jsonContent.getBytes());
 
-        try (MockedStatic<ApiKeyConfig> mockedApiKeyConfig = mockStatic(ApiKeyConfig.class)) {
-            mockedApiKeyConfig.when(() -> ApiKeyConfig.getFileStream(anyString()))
-                    .thenReturn(inputStream);
+        // Create the temp-dir/.flashcard-generator/ directory
+        if (!configDir.exists())
+            configDir.mkdirs();
 
-            assertThatThrownBy(ApiKeyConfig::getApiKeyFromJsonFile)
-                    .isInstanceOf(ApiKeyNotFoundException.class)
-                    .hasMessageContaining("API key not found in:");
+        assertThat(configDir.isDirectory()).isTrue();
+        assertThat(configDir.isHidden()).isTrue();
+
+
+        // Create the temporary config file and write empty JSON
+        try (BufferedWriter br = new BufferedWriter(new FileWriter(configFile))) {
+            br.write(jsonContent);
         }
+
+        assertThat(configFile.exists()).isTrue();
+
+        Exception exception = assertThrows(ApiKeyNotFoundException.class, () -> {
+            ApiKeyConfig.getApiKeyFromJsonFile(configDir.toString());
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("API key not found in the file");
     }
 
     @Test
-    void testStoreApiKeyInJsonFile_directoryExists() throws IOException {
+    void storeApiKeyInJsonFile_directoryExists() throws Exception {
         String testApiKey ="testApiKey";
 
         // Create the directory before making call to method under test
@@ -83,7 +124,7 @@ class ApiKeyConfigTest {
     }
 
     @Test
-    public void storeApiKeyInJsonFile_directoryDoesNotExist() throws IOException {
+    public void storeApiKeyInJsonFile_directoryDoesNotExist() throws Exception {
         String testApiKey ="testApiKey";
 
         // Call the method
@@ -101,7 +142,7 @@ class ApiKeyConfigTest {
     }
 
     @Test
-    public void storeApiKeyInJsonFile_directoryExists_KeyInvalid() throws IOException {
+    public void storeApiKeyInJsonFile_directoryExists_KeyInvalid() throws Exception {
         String testApiKey ="testApiKey";
 
         // Call the method
@@ -117,6 +158,4 @@ class ApiKeyConfigTest {
             assertThat(line).isNotEqualTo("{\"apiKey\":\"invalidKey\"}");
         }
     }
-
-
 }
