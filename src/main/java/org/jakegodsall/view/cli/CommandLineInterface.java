@@ -18,6 +18,8 @@ public class CommandLineInterface {
 
     public void main() {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))){
+            ApiKeyHandler.handle(bufferedReader);
+
             Language chosenLanguage = getLanguageFromUser(bufferedReader);
             LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage, bufferedReader);
             Options selectedOptions = loh.getOptions();
