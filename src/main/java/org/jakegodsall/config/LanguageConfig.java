@@ -7,7 +7,8 @@ import org.jakegodsall.models.Language;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The {@code LanguageConfig} class handles the loading and retrieval of language configurations
@@ -26,15 +27,25 @@ public class LanguageConfig {
      * This method is called when the class is loaded.
      */
     public static void loadConfig() {
-        ObjectMapper objectMapper = new ObjectMapper();
         try (InputStream inputStream = LanguageConfig.class.getResourceAsStream(LANGUAGE_CONFIG_FILE)) {
-            if (inputStream == null) {
-                throw new IOException("Resource not found: " + LANGUAGE_CONFIG_FILE);
-            }
-            languageMap = objectMapper.readValue(inputStream, new TypeReference<Map<String, Language>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
+            loadConfig(inputStream);
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
         }
+    }
+
+    /**
+     * Loads the language configuration from the provided InputStream into the {@code languageMap}.
+     *
+     * @param inputStream the InputStream from which to read the language configuration
+     * @throws IOException if an I/O error occurs
+     */
+    public static void loadConfig(InputStream inputStream) throws IOException {
+        if (inputStream == null) {
+            throw new IOException("InputStream is null");
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        languageMap = objectMapper.readValue(inputStream, new TypeReference<Map<String, Language>>() {});
     }
 
     /**
@@ -46,7 +57,7 @@ public class LanguageConfig {
      */
     public static Language getLanguage(String code) {
         if (!languageMap.containsKey(code)) {
-            throw new NoSuchLanguageException("Language '" + code + "' is not found");
+            throw new NoSuchLanguageException("Language with code '" + code + "' is not found");
         }
         return languageMap.get(code);
     }
