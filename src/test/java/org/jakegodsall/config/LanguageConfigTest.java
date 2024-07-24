@@ -23,14 +23,14 @@ public class LanguageConfigTest {
     }
 
     @Test
-    public void testGetLanguage_ExistingLanguage() {
+    public void testGetLanguage_existingLanguage() {
         Language language = LanguageConfig.getLanguage("en");
         assertThat(language).isNotNull();
         assertThat(language.getName()).isEqualTo("English");
     }
 
     @Test
-    public void testGetLanguage_NonExistingLanguage() {
+    public void testGetLanguage_nonExistingLanguage() {
         Exception exception = assertThrows(NoSuchLanguageException.class, () -> LanguageConfig.getLanguage("es"));
         assertThat(exception.getMessage()).isEqualTo("Language with code 'es' is not found");
     }
