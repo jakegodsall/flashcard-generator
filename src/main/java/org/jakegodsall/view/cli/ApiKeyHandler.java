@@ -21,7 +21,6 @@ public class ApiKeyHandler {
                 System.err.println(ioException.getMessage());
             }
         }
-
     }
 
     public static String promptUserForApiKey(BufferedReader bufferedReader) throws IOException {

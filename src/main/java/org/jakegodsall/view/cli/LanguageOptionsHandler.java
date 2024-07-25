@@ -1,6 +1,5 @@
 package org.jakegodsall.view.cli;
 
-import com.fasterxml.jackson.core.JsonToken;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +12,6 @@ import org.jakegodsall.utils.TenseUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @Getter
