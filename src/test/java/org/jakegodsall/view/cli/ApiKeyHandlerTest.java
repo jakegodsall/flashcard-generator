@@ -1,20 +1,18 @@
 package org.jakegodsall.view.cli;
 
 import org.jakegodsall.config.ApiKeyConfig;
+import org.jakegodsall.config.impl.ApiKeyConfigImpl;
 import org.jakegodsall.exceptions.ApiKeyNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 
 class ApiKeyHandlerTest {
 
@@ -35,56 +33,54 @@ class ApiKeyHandlerTest {
         System.setOut(originalErr);
     }
 
+
     @Test
     void handle_apiKeyFound() throws Exception {
-        try (MockedStatic<ApiKeyConfig> apiKeyConfigMock = Mockito.mockStatic(ApiKeyConfig.class)) {
-            // set up the ApiKeyConfig.getApiKeyFromJsonFile mock
-            given(ApiKeyConfig.getApiKeyFromJsonFile(ApiKeyConfig.CONFIG_DIR))
-                    .willReturn("validApiKey");
+        // Mock the ApiKeyConfig
+        ApiKeyConfig apiKeyConfigMock = mock(ApiKeyConfig.class);
 
-            // call the handle method
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            ApiKeyHandler.handle(br);
+        // Mock the ApiKeyConfig.getApiKeyFromJsonFile method
+        given(apiKeyConfigMock.getApiKeyFromJsonFile(anyString()))
+                .willReturn("validApiKey");
 
-            // verify the output
-            assertThat(outContent.toString()).isEqualTo("API Key Found: validApiKey\n");
+        // Create the ApiKeyHandler using the ApiKeyConfig mock as a dependency
+        ApiKeyHandler apiKeyHandler = new ApiKeyHandler(apiKeyConfigMock);
 
-            // clean up
-            Mockito.clearAllCaches();
-        }
+        // Prepare the BufferedReader
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        // Call the method
+        apiKeyHandler.handle(bufferedReader);
+
+        // verify the results
+        assertThat(outContent.toString()).isEqualTo("API Key Found: validApiKey\n");
     }
 
-    @Disabled
     @Test
     void handle_apiKeyNotFound() throws Exception {
-        // Create a static mock of ApiKeyConfig
-        Mockito.mockStatic(ApiKeyConfig.class);
-        // set up the ApiKeyConfig.getApiKeyFromJsonFile mock
-        given(ApiKeyConfig.getApiKeyFromJsonFile(ApiKeyConfig.CONFIG_DIR))
+        // Mock the ApiKeyConfig
+        ApiKeyConfig apiKeyConfigMock = mock(ApiKeyConfig.class);
+
+        // Set up the ApiKeyConfig.getApiKeyFromJsonFile mock
+        given(apiKeyConfigMock.getApiKeyFromJsonFile(anyString()))
                 .willThrow(new ApiKeyNotFoundException("API key not found"));
 
-        // Mock the static method storeApiKeyInJsonFile
-        doNothing().when(ApiKeyConfig.class);
-        ApiKeyConfig.storeApiKeyInJsonFile(anyString(), eq(ApiKeyConfig.CONFIG_DIR));
+        // Do nothing when storeApiKeyInJsonFile called
+        doNothing().when(apiKeyConfigMock).storeApiKeyInJsonFile(anyString(), anyString());
 
-        // Mock the static method storeApiKeyInJsonFile
-        Mockito.mockStatic(ApiKeyHandler.class);
-        given(ApiKeyHandler.promptUserForApiKey(any(BufferedReader.class))).willReturn("newApiKey");
+        // Prepare the BufferedReader
+        String input = "newApiKey\n";
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(input.getBytes())));
 
-        // Prepare the input for BufferedReader
-        String simulatedUserInput = "newApiKey\n";
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(simulatedUserInput.getBytes())));
+        // Create the ApiKeyHandler with mocked ApiKeyConfig
+        ApiKeyHandler apiKeyHandler = new ApiKeyHandler(apiKeyConfigMock);
 
         // Call the handle method
-        ApiKeyHandler.handle(bufferedReader);
+        apiKeyHandler.handle(bufferedReader);
 
         // Verify the error output and prompt interaction
-        assertThat(errContent.toString().contains("API key not found"));
-        assertThat(outContent.toString().contains("API Key Found: newApiKey"));
-
-        // Clean up
-        Mockito.clearAllCaches();
-
+        verify(apiKeyConfigMock).getApiKeyFromJsonFile(ApiKeyConfigImpl.CONFIG_DIR);
+        verify(apiKeyConfigMock).storeApiKeyInJsonFile("newApiKey", ApiKeyConfigImpl.CONFIG_DIR);
     }
 
     @Test

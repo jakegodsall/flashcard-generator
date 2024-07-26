@@ -56,7 +56,7 @@ public class LanguageConfig {
      * @throws NoSuchLanguageException if the language code is not found in the {@code languageMap}
      */
     public static Language getLanguage(String code) {
-        if (!languageMap.containsKey(code)) {
+        if (!languageMap.containsKey(code.toLowerCase())) {
             throw new NoSuchLanguageException("Language with code '" + code + "' is not found");
         }
         return languageMap.get(code);

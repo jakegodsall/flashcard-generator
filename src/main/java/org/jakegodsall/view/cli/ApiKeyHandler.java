@@ -1,22 +1,26 @@
 package org.jakegodsall.view.cli;
 
+import lombok.RequiredArgsConstructor;
 import org.jakegodsall.config.ApiKeyConfig;
+import org.jakegodsall.config.impl.ApiKeyConfigImpl;
 import org.jakegodsall.exceptions.ApiKeyNotFoundException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class ApiKeyHandler {
+    private final ApiKeyConfig apiKeyConfig;
 
-    public static void handle(BufferedReader bufferedReader) {
+    public void handle(BufferedReader bufferedReader) {
         try {
-            String api = ApiKeyConfig.getApiKeyFromJsonFile(ApiKeyConfig.CONFIG_DIR);
+            String api = apiKeyConfig.getApiKeyFromJsonFile(ApiKeyConfigImpl.CONFIG_DIR);
             System.out.println("API Key Found: " + api);
         } catch (ApiKeyNotFoundException | IOException exception) {
             System.err.println(exception.getMessage());
             try {
                 String newApiKey = promptUserForApiKey(bufferedReader);
-                ApiKeyConfig.storeApiKeyInJsonFile(newApiKey, ApiKeyConfig.CONFIG_DIR);
+                apiKeyConfig.storeApiKeyInJsonFile(newApiKey, ApiKeyConfigImpl.CONFIG_DIR);
             } catch (IOException ioException) {
                 System.err.println(ioException.getMessage());
             }

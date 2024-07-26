@@ -1,5 +1,6 @@
 package org.jakegodsall.view.cli;
 
+import lombok.RequiredArgsConstructor;
 import org.jakegodsall.config.LanguageConfig;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
@@ -11,14 +12,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class CommandLineInterface {
     private final FlashcardService flashcardService = new FlashcardServiceGPTImpl();
 
     Map<String, String> languages = LanguageConfig.getAllLanguageNames();
 
+    private final ApiKeyHandler apiKeyHandler;
+
     public void main() {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))){
-            ApiKeyHandler.handle(bufferedReader);
+            apiKeyHandler.handle(bufferedReader);
 
             Language chosenLanguage = getLanguageFromUser(bufferedReader);
             LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage, bufferedReader);

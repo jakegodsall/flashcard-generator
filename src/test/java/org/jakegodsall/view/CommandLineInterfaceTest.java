@@ -1,7 +1,9 @@
 package org.jakegodsall.view;
 
 import org.jakegodsall.config.LanguageConfig;
+import org.jakegodsall.config.impl.ApiKeyConfigImpl;
 import org.jakegodsall.models.Language;
+import org.jakegodsall.view.cli.ApiKeyHandler;
 import org.jakegodsall.view.cli.CommandLineInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +21,7 @@ class CommandLineInterfaceTest {
 
     @BeforeEach
     void setUp() {
-        commandLineInterface = new CommandLineInterface();
+        commandLineInterface = new CommandLineInterface(new ApiKeyHandler(new ApiKeyConfigImpl()));
     }
 
     @Test
