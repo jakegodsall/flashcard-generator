@@ -26,4 +26,11 @@ public interface HttpClientService {
      * @throws IOException if an I/O error occurs.
      */
     HttpResponse sendPostRequest(String url, String payload) throws IOException;
+
+    /**
+     * Releases the Http client.
+     *
+     * @throws IOException if the connection is not open.
+     */
+    void close() throws IOException;
 }

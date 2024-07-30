@@ -64,10 +64,10 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
             HttpEntity responseEntity = response.getEntity();
             String result = EntityUtils.toString(responseEntity);
-            System.out.println(result);
-            // Assuming the result contains both sentences
             String englishSentence = ""; // Extract English sentence from result
             String foreignSentence = ""; // Extract foreign sentence from result
+
+            httpClientService.close();
             return new SentencePair(englishSentence, foreignSentence);
         } catch (IOException ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);

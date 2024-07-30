@@ -17,40 +17,43 @@ import java.nio.charset.StandardCharsets;
  * Implementation of HttpClientService for GPT-specific HTTP requests.
  */
 public class HttpClientServiceGPTImpl implements HttpClientService {
+    private final CloseableHttpClient httpClient;
     private String BEARER_TOKEN;
 
     HttpClientServiceGPTImpl() {
         ApiKeyConfig apiKeyConfig = new ApiKeyConfigImpl();
         try {
             BEARER_TOKEN = apiKeyConfig.getApiKeyFromFile(ApiKeyConfigImpl.CONFIG_DIR);
+            System.out.println("BEARER TOKEN: " + BEARER_TOKEN);
         } catch (Exception exception) {
             System.err.println(exception.getMessage());
         }
+        this.httpClient = HttpClients.createDefault();
     }
 
     @Override
     public HttpResponse sendGetRequest(String url) throws IOException {
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpGet request = new HttpGet(url);
-            request.setHeader("Authorization", "Bearer " + BEARER_TOKEN);
-            request.setHeader("Accept", "application/json");
-            request.setHeader("Content-Type", "application/json; charset=UTF-8");
-            return httpClient.execute(request);
-        }
+        HttpGet request = new HttpGet(url);
+        request.setHeader("Authorization", "Bearer " + BEARER_TOKEN);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-Type", "application/json; charset=UTF-8");
+        return httpClient.execute(request);
     }
 
     @Override
     public HttpResponse sendPostRequest(String url, String payload) throws IOException {
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpPost request = new HttpPost(url);
-            request.setHeader("Authorization", "Bearer " + BEARER_TOKEN);
-            request.setHeader("Accept", "application/json");
-            request.setHeader("Content-Type", "application/json; charset=UTF-8");
+        HttpPost request = new HttpPost(url);
+        request.setHeader("Authorization", "Bearer " + BEARER_TOKEN);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-Type", "application/json; charset=UTF-8");
 
-            StringEntity entity = new StringEntity(payload, StandardCharsets.UTF_8);
-            request.setEntity(entity);
+        StringEntity entity = new StringEntity(payload, StandardCharsets.UTF_8);
+        request.setEntity(entity);
 
-            return httpClient.execute(request);
-        }
+        return httpClient.execute(request);
+    }
+
+    public void close() throws IOException {
+        httpClient.close();
     }
 }
