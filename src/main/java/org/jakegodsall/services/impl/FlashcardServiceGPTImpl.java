@@ -5,6 +5,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
+import org.jakegodsall.models.SentencePair;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.HttpClientService;
 import org.jakegodsall.services.JsonParseService;
@@ -25,13 +26,8 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
 
     private final HttpClientService httpClientService = new HttpClientServiceGPTImpl();
     private final JsonParseService jsonParseService = new JsonParseServiceGPTImpl();
-    private final PromptService promptService = new PromptServiceGPTImpl();
+    private final PromptService promptGenerator = new PromptServiceGPTImpl();
 
-    /**
-     * Retrieves a list of available models from the OpenAI API.
-     *
-     * @return a list of model names.
-     */
     @Override
     public List<String> getAvailableModels() {
         try {
@@ -39,25 +35,17 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity);
             return jsonParseService.parseModels(result);
-        } catch (Exception ioException) {
+        } catch (IOException ioException) {
             logger.log(Level.SEVERE, ioException.getMessage(), ioException);
             return List.of();
         }
     }
 
-    /**
-     * Generates a sentence using the given word, language, and options.
-     *
-     * @param word     the word to include in the sentence.
-     * @param language the language to use.
-     * @param options  additional options for sentence generation.
-     * @return a generated sentence.
-     */
     @Override
     public String getSentence(String word, Language language, Options options) {
         try {
-            String prompt = promptService.generatePrompt(word, language, options);
-            String requestBody = promptService.generateRequestBody(prompt);
+            String prompt = promptGenerator.generatePromptForSentence(word, language, options);
+            String requestBody = promptGenerator.generateRequestBody(prompt);
             HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
             HttpEntity responseEntity = response.getEntity();
             String result = EntityUtils.toString(responseEntity);
@@ -65,6 +53,24 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
         } catch (IOException ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
             return "";
+        }
+    }
+
+    @Override
+    public SentencePair generateSentencePair(String word, Language language, Options options) {
+        try {
+            String prompt = promptGenerator.generatePromptForSentencePair(word, language, options);
+            String requestBody = promptGenerator.generateRequestBody(prompt);
+            HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
+            HttpEntity responseEntity = response.getEntity();
+            String result = EntityUtils.toString(responseEntity);
+            // Assuming the result contains both sentences
+            String englishSentence = ""; // Extract English sentence from result
+            String foreignSentence = ""; // Extract foreign sentence from result
+            return new SentencePair(englishSentence, foreignSentence);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            return null;
         }
     }
 }

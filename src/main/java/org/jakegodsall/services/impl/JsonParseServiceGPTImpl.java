@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Implementation of JsonParseService for GPT-specific JSON parsing.
+ */
 public class JsonParseServiceGPTImpl implements JsonParseService {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -32,7 +35,6 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
         } else {
             throw new NoSuchElementException("Missing 'data' field in the JSON response");
         }
-
         return models;
     }
 

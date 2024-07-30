@@ -4,7 +4,26 @@ import org.apache.http.HttpResponse;
 
 import java.io.IOException;
 
+/**
+ * Interface for HTTP client service to handle HTTP requests.
+ */
 public interface HttpClientService {
-    HttpResponse sendGetRequest(String url) throws Exception;
-    HttpResponse sendPostRequest(String url, String payload) throws IOException;
+    /**
+     * Sends a GET request to the specified URL.
+     *
+     * @param url the URL to send the GET request to.
+     * @return the HTTP response.
+     * @throws IOException if an I/O error occurs.
+     */
+    HttpResponse sendGetRequest(String url) throws IOException;
+
+    /**
+     * Sends a POST request to the specified URL with the given JSON body.
+     *
+     * @param url  the URL to send the POST request to.
+     * @param json the JSON body to include in the POST request.
+     * @return the HTTP response.
+     * @throws IOException if an I/O error occurs.
+     */
+    HttpResponse sendPostRequest(String url, String json) throws IOException;
 }

@@ -11,6 +11,9 @@ import org.jakegodsall.services.HttpClientService;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Implementation of HttpClientService for GPT-specific HTTP requests.
+ */
 public class HttpClientServiceGPTImpl implements HttpClientService {
     private static final String BEARER_TOKEN = System.getenv("OPENAI_API_KEY");
 
