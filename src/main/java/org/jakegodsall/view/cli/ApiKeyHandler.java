@@ -14,13 +14,13 @@ public class ApiKeyHandler {
 
     public void handle(BufferedReader bufferedReader) {
         try {
-            String api = apiKeyConfig.getApiKeyFromJsonFile(ApiKeyConfigImpl.CONFIG_DIR);
+            String api = apiKeyConfig.getApiKeyFromFile(ApiKeyConfigImpl.CONFIG_DIR);
             System.out.println("API Key Found: " + api);
         } catch (ApiKeyNotFoundException | IOException exception) {
             System.err.println(exception.getMessage());
             try {
                 String newApiKey = promptUserForApiKey(bufferedReader);
-                apiKeyConfig.storeApiKeyInJsonFile(newApiKey, ApiKeyConfigImpl.CONFIG_DIR);
+                apiKeyConfig.storeApiKeyInFile(newApiKey, ApiKeyConfigImpl.CONFIG_DIR);
             } catch (IOException ioException) {
                 System.err.println(ioException.getMessage());
             }

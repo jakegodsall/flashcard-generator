@@ -34,7 +34,7 @@ public class ApiKeyConfigImpl implements ApiKeyConfig {
      * @return the API key as a String, or an empty string if the key is not found or an error occurs.
      */
     @Override
-    public String getApiKeyFromJsonFile(String configDir) throws ApiKeyNotFoundException, IOException {
+    public String getApiKeyFromFile(String configDir) throws ApiKeyNotFoundException, IOException {
         // get API file
         try (InputStream inputStream = getFileStream(configDir + "/" + CONFIG_FILE_NAME)) {
             // Navigate API file
@@ -58,7 +58,7 @@ public class ApiKeyConfigImpl implements ApiKeyConfig {
      * @param apiKey the key to store in the configuration file.
      */
     @Override
-    public void storeApiKeyInJsonFile(String apiKey, String configDir) throws IOException {
+    public void storeApiKeyInFile(String apiKey, String configDir) throws IOException {
         // Check to see if the directory already exists
         if (!DirectoryUtils.hiddenConfigDirectoryExists(configDir)) {
             // if it doesn't exist, create it

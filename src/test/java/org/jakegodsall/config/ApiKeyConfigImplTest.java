@@ -56,7 +56,7 @@ class ApiKeyConfigImplTest {
             throw new RuntimeException("Failed to write to the config file", ex);
         }
 
-        String actualApiKey = apiKeyConfig.getApiKeyFromJsonFile(configDir.toString());
+        String actualApiKey = apiKeyConfig.getApiKeyFromFile(configDir.toString());
 
         assertThat(configFile.exists()).isTrue();
         assertThat(actualApiKey).isEqualTo(testApiKey);
@@ -73,7 +73,7 @@ class ApiKeyConfigImplTest {
         assertThat(configFile.exists()).isFalse();
 
         Exception exception = assertThrows(FileNotFoundException.class, () -> {
-            apiKeyConfig.getApiKeyFromJsonFile(configDir.toString());
+            apiKeyConfig.getApiKeyFromFile(configDir.toString());
         });
 
         assertThat(exception.getMessage()).isEqualTo("API file does not exist");
@@ -99,7 +99,7 @@ class ApiKeyConfigImplTest {
         assertThat(configFile.exists()).isTrue();
 
         Exception exception = assertThrows(ApiKeyNotFoundException.class, () -> {
-            apiKeyConfig.getApiKeyFromJsonFile(configDir.toString());
+            apiKeyConfig.getApiKeyFromFile(configDir.toString());
         });
 
         assertThat(exception.getMessage()).isEqualTo("API key not found in the file");
@@ -113,7 +113,7 @@ class ApiKeyConfigImplTest {
         DirectoryUtils.createHiddenConfigDirectory(configDir.toString());
 
         // Call the method
-        apiKeyConfig.storeApiKeyInJsonFile(testApiKey, configDir.toString());
+        apiKeyConfig.storeApiKeyInFile(testApiKey, configDir.toString());
 
         // Verify
         assertThat(configDir.exists()).isTrue();
@@ -131,7 +131,7 @@ class ApiKeyConfigImplTest {
         String testApiKey ="testApiKey";
 
         // Call the method
-        apiKeyConfig.storeApiKeyInJsonFile(testApiKey, configDir.toString());
+        apiKeyConfig.storeApiKeyInFile(testApiKey, configDir.toString());
 
         // Verify
         assertThat(configDir.exists()).isTrue();
@@ -149,7 +149,7 @@ class ApiKeyConfigImplTest {
         String testApiKey ="testApiKey";
 
         // Call the method
-        apiKeyConfig.storeApiKeyInJsonFile(testApiKey, configDir.toString());
+        apiKeyConfig.storeApiKeyInFile(testApiKey, configDir.toString());
 
         // Verify
         assertThat(configDir.exists()).isTrue();

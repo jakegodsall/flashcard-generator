@@ -40,7 +40,7 @@ class ApiKeyHandlerTest {
         ApiKeyConfig apiKeyConfigMock = mock(ApiKeyConfig.class);
 
         // Mock the ApiKeyConfig.getApiKeyFromJsonFile method
-        given(apiKeyConfigMock.getApiKeyFromJsonFile(anyString()))
+        given(apiKeyConfigMock.getApiKeyFromFile(anyString()))
                 .willReturn("validApiKey");
 
         // Create the ApiKeyHandler using the ApiKeyConfig mock as a dependency
@@ -62,11 +62,11 @@ class ApiKeyHandlerTest {
         ApiKeyConfig apiKeyConfigMock = mock(ApiKeyConfig.class);
 
         // Set up the ApiKeyConfig.getApiKeyFromJsonFile mock
-        given(apiKeyConfigMock.getApiKeyFromJsonFile(anyString()))
+        given(apiKeyConfigMock.getApiKeyFromFile(anyString()))
                 .willThrow(new ApiKeyNotFoundException("API key not found"));
 
         // Do nothing when storeApiKeyInJsonFile called
-        doNothing().when(apiKeyConfigMock).storeApiKeyInJsonFile(anyString(), anyString());
+        doNothing().when(apiKeyConfigMock).storeApiKeyInFile(anyString(), anyString());
 
         // Prepare the BufferedReader
         String input = "newApiKey\n";
@@ -79,8 +79,8 @@ class ApiKeyHandlerTest {
         apiKeyHandler.handle(bufferedReader);
 
         // Verify the error output and prompt interaction
-        verify(apiKeyConfigMock).getApiKeyFromJsonFile(ApiKeyConfigImpl.CONFIG_DIR);
-        verify(apiKeyConfigMock).storeApiKeyInJsonFile("newApiKey", ApiKeyConfigImpl.CONFIG_DIR);
+        verify(apiKeyConfigMock).getApiKeyFromFile(ApiKeyConfigImpl.CONFIG_DIR);
+        verify(apiKeyConfigMock).storeApiKeyInFile("newApiKey", ApiKeyConfigImpl.CONFIG_DIR);
     }
 
     @Test

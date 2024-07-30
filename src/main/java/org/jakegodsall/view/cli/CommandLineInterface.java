@@ -6,6 +6,7 @@ import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.impl.FlashcardServiceGPTImpl;
+import org.jakegodsall.utils.ConsoleUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,9 +24,9 @@ public class CommandLineInterface {
     public void main() {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))){
             apiKeyHandler.handle(bufferedReader);
-
             Language chosenLanguage = getLanguageFromUser(bufferedReader);
             LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage, bufferedReader);
+            ConsoleUtils.resetScreen();
             Options selectedOptions = loh.getOptions();
 
             String word;
@@ -52,6 +53,8 @@ public class CommandLineInterface {
         while (!validInput) {
             System.out.println("Choose the desired language from the following list (use codes):");
             input = bufferedReader.readLine();
+            if (input == null)
+                throw new IllegalArgumentException("Input cannot be null");
             if (languages.containsKey(input.toLowerCase().trim())) {
                 validInput = true;
             }
