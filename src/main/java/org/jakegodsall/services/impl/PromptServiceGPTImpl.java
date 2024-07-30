@@ -33,25 +33,19 @@ public class PromptServiceGPTImpl implements PromptService {
     }
 
     @Override
-    public String generatePromptForSentence(String word, Language language, Options options) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Please create a sentence using the following foreign language word and its associated details.")
-                .append(" Ensure that the sentence is grammatically correct and incorporates the specified options.")
-                .append("\nLanguage: ").append(language.getName())
-                .append("\nWord: ").append(word)
-                .append("\n\nDetails: ");
-
-        return sb.toString();
+    public String generatePromptForSingleSentence(String word, Language language, Options options) {
+        return "Please create a sentence using the following foreign language word and its associated details." +
+                " Ensure that the sentence is grammatically correct and incorporates the specified options." +
+                "\nLanguage: " + language.getName() +
+                "\nWord: " + word +
+                "\n\nDetails: ";
     }
 
     @Override
     public String generatePromptForSentencePair(String word, Language language, Options options) {
         // Create JSON payload
-        StringBuilder sb = new StringBuilder();
-        sb.append("Generate a sentence pair in JSON format. The JSON should include a sentence in the target language and its translation in the native language. The structure should be:\n");
-        sb.append("{\n").append("  \"nativeSentence\": \"<sentence in native language>\"\n").append("  \"targetSentence\": \"<sentence in target language>\"\n").append("}\n");
-        sb.append("\nThe word is ").append(word).append(" and the target language is ").append(language.getName()).append(".\n");
-
-        return sb.toString();
+        return "Generate a sentence pair in JSON format. The JSON should include a sentence in the target language and its translation in the native language. The structure should be:\n" +
+                "{\n" + "  \"nativeSentence\": \"<sentence in native language>\"\n" + "  \"targetSentence\": \"<sentence in target language>\"\n" + "}\n" +
+                "\nThe word is " + word + " and the target language is " + language.getName() + ".\n";
     }
 }

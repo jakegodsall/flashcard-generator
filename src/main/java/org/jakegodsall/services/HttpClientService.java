@@ -21,9 +21,9 @@ public interface HttpClientService {
      * Sends a POST request to the specified URL with the given JSON body.
      *
      * @param url  the URL to send the POST request to.
-     * @param json the JSON body to include in the POST request.
+     * @param payload the JSON body to include in the POST request.
      * @return the HTTP response.
      * @throws IOException if an I/O error occurs.
      */
-    HttpResponse sendPostRequest(String url, String json) throws IOException;
+    HttpResponse sendPostRequest(String url, String payload) throws IOException;
 }

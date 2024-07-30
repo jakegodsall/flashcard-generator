@@ -44,7 +44,7 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     @Override
     public String getSentence(String word, Language language, Options options) {
         try {
-            String prompt = promptGenerator.generatePromptForSentence(word, language, options);
+            String prompt = promptGenerator.generatePromptForSingleSentence(word, language, options);
             String requestBody = promptGenerator.generateRequestBody(prompt);
             HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
             HttpEntity responseEntity = response.getEntity();
@@ -64,6 +64,7 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
             HttpEntity responseEntity = response.getEntity();
             String result = EntityUtils.toString(responseEntity);
+            System.out.println(result);
             // Assuming the result contains both sentences
             String englishSentence = ""; // Extract English sentence from result
             String foreignSentence = ""; // Extract foreign sentence from result

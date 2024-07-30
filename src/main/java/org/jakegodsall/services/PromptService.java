@@ -18,22 +18,22 @@ public interface PromptService {
     String generateRequestBody(String prompt) throws JsonProcessingException;
 
     /**
-     * Generates the prompt for sentence creation.
+     * Generates the prompt for sentence creation in the target language.
      *
      * @param word     the word to include in the sentence.
      * @param language the language to use.
      * @param options  additional options for sentence generation.
      * @return the generated prompt.
      */
-    String generatePromptForSentence(String word, Language language, Options options);
+    String generatePromptForSingleSentence(String word, Language language, Options options);
 
     /**
-     * Generates the prompt for sentence pair creation.
+     * Generates the prompt for sentence pair creation in both the native language and target language.
      *
      * @param word     the word to include in the sentences.
      * @param language the language to use.
      * @param options  additional options for sentence generation.
-     * @return the generated prompt.
+     * @return the generated prompt. Format: {"nativeSentence": <sentence in native language>, "targetSentence": <sentence in target language>}
      */
     String generatePromptForSentencePair(String word, Language language, Options options);
 }

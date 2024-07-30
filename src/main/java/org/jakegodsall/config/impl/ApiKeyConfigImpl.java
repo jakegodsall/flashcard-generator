@@ -39,6 +39,7 @@ public class ApiKeyConfigImpl implements ApiKeyConfig {
         try (InputStream inputStream = getFileStream(configDir + "/" + CONFIG_FILE_NAME)) {
             // Navigate API file
             JsonNode rootNode = objectMapper.readTree(inputStream);
+            System.out.println(rootNode);
             JsonNode apiKey = rootNode.path("apiKey");
 
             // Check to see if field exists
