@@ -64,6 +64,8 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
                     targetWordNode.asText(),
                     targetSentenceNode.asText()
             );
+        } catch (NoSuchElementException ex) {
+            throw ex;
         } catch (Exception ex) {
             throw new JsonParseException("Failed to parse WordFlashcard JSON");
         }
@@ -88,6 +90,8 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
                     nativeSentenceNode.asText(),
                     targetSentenceNode.asText()
             );
+        } catch (NoSuchElementException ex) {
+        throw ex;
         } catch (Exception ex) {
             throw new JsonParseException("Failed to parse SentenceFlashcard JSON");
         }
