@@ -1,8 +1,11 @@
 package org.jakegodsall.services.impl;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.jakegodsall.models.flashcards.SentenceFlashcard;
+import org.jakegodsall.models.flashcards.WordFlashcard;
 import org.jakegodsall.services.JsonParseService;
 
 import java.io.IOException;
@@ -39,24 +42,54 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
     }
 
     @Override
-    public String parseSentence(String json) throws IOException {
-        JsonNode rootNode = objectMapper.readTree(json);
-        JsonNode choicesNode = rootNode.path("choices");
+    public WordFlashcard parseWordFlashcard(String responseBody) throws JsonParseException {
+        try {
+            // Parse the JSON into a JsonNode tree
+            JsonNode rootNode = objectMapper.readTree(responseBody);
 
-        if (!choicesNode.isArray() || choicesNode.isEmpty()) {
-            throw new NoSuchElementException("Missing or empty 'choices' field in the JSON response");
+            // Navigate the JSON tree to extract the required values
+            JsonNode nativeWordNode = rootNode.path("nativeWord");
+            if (nativeWordNode.isMissingNode())
+                throw new NoSuchElementException("Missing 'nativeWord' field in the JSON response");
+            JsonNode targetWordNode = rootNode.path("targetWord");
+            if (targetWordNode.isMissingNode())
+                throw new NoSuchElementException("Missing 'targetWord' field in the JSON response");
+            JsonNode targetSentenceNode = rootNode.path("targetSentence");
+            if (targetSentenceNode.isMissingNode())
+                throw new NoSuchElementException("Missing 'targetSentence' field in the JSON response");
+
+            // Encapsulate in WordFlashcard object and return
+            return new WordFlashcard(
+                    nativeWordNode.asText(),
+                    targetWordNode.asText(),
+                    targetSentenceNode.asText()
+            );
+        } catch (Exception ex) {
+            throw new JsonParseException("Failed to parse WordFlashcard JSON");
         }
+    }
 
-        JsonNode messageNode = choicesNode.get(0).path("message");
-        if (messageNode.isMissingNode()) {
-            throw new NoSuchElementException("Missing 'message' field in the JSON response");
+    @Override
+    public SentenceFlashcard parseSentenceFlashcard(String responseBody) throws JsonParseException {
+        try {
+            // Parse the JSON into a JsonNode tree
+            JsonNode rootNode = objectMapper.readTree(responseBody);
+
+            // Navigate the JSON tree to extract the required values
+            JsonNode nativeSentenceNode = rootNode.path("nativeSentence");
+            if (nativeSentenceNode.isMissingNode())
+                throw new NoSuchElementException("Missing 'nativeSentence' field in the JSON response");
+            JsonNode targetSentenceNode = rootNode.path("targetSentence");
+            if (targetSentenceNode.isMissingNode())
+                throw new NoSuchElementException("Missing 'targetSentence' field in the JSON response");
+
+            // Encapsulate in SentenceFlashcard object and return
+            return new SentenceFlashcard(
+                    nativeSentenceNode.asText(),
+                    targetSentenceNode.asText()
+            );
+        } catch (Exception ex) {
+            throw new JsonParseException("Failed to parse SentenceFlashcard JSON");
         }
-
-        JsonNode contentNode = messageNode.path("content");
-        if (contentNode.isMissingNode()) {
-            throw new NoSuchElementException("Missing 'content' field in the JSON response");
-        }
-
-        return contentNode.asText();
     }
 }
