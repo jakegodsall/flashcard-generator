@@ -44,34 +44,36 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
 
     @Override
     public WordFlashcard getWordFlashcard(String targetWord, Language language, Options options) {
-        try {
-            String prompt = promptGenerator.generatePromptForSingleSentence(targetWord, language, options);
-            String requestBody = promptGenerator.generateRequestBody(prompt);
-            HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
-            HttpEntity responseEntity = response.getEntity();
-            String result = EntityUtils.toString(responseEntity);
-            return jsonParseService.parseSentence(result);
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
-        }
+//        try {
+//            String prompt = promptGenerator.generatePromptForSingleSentence(targetWord, language, options);
+//            String requestBody = promptGenerator.generateRequestBody(prompt);
+//            HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
+//            HttpEntity responseEntity = response.getEntity();
+//            String result = EntityUtils.toString(responseEntity);
+//            return jsonParseService.parseSentence(result);
+//        } catch (IOException ex) {
+//            logger.log(Level.SEVERE, ex.getMessage(), ex);
+//        }
+        return null;
     }
 
     @Override
     public SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options) {
-        try {
-            String prompt = promptGenerator.generatePromptForSentencePair(word, language, options);
-            String requestBody = promptGenerator.generateRequestBody(prompt);
-            HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
-            HttpEntity responseEntity = response.getEntity();
-            String result = EntityUtils.toString(responseEntity);
-            String englishSentence = ""; // Extract English sentence from result
-            String foreignSentence = ""; // Extract foreign sentence from result
-
-            httpClientService.close();
-            return new SentenceFlashcard(englishSentence, foreignSentence);
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
-            return null;
-        }
+//        try {
+//            String prompt = promptGenerator.generatePromptForSentencePair(word, language, options);
+//            String requestBody = promptGenerator.generateRequestBody(prompt);
+//            HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
+//            HttpEntity responseEntity = response.getEntity();
+//            String result = EntityUtils.toString(responseEntity);
+//            String englishSentence = ""; // Extract English sentence from result
+//            String foreignSentence = ""; // Extract foreign sentence from result
+//
+//            httpClientService.close();
+//            return new SentenceFlashcard(englishSentence, foreignSentence);
+//        } catch (IOException ex) {
+//            logger.log(Level.SEVERE, ex.getMessage(), ex);
+//            return null;
+//        }
+        return null;
     }
 }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
 import org.jakegodsall.services.PromptService;
+import org.jakegodsall.utils.StringUtils;
 
 
 /**
@@ -33,19 +34,25 @@ public class PromptServiceGPTImpl implements PromptService {
     }
 
     @Override
-    public String generatePromptForSingleSentence(String word, Language language, Options options) {
-        return "Please create a sentence using the following foreign language word and its associated details." +
-                " Ensure that the sentence is grammatically correct and incorporates the specified options." +
-                "\nLanguage: " + language.getName() +
-                "\nWord: " + word +
-                "\n\nDetails: ";
+    public String generatePromptForWordFlashcard(String targetWord, Language language, Options options) {
+        return "Given a word in a target language generate the following JSON.\n" +
+                "The JSON should include the word translated to the native language of English, the target word itself and a very basic sentence in the target language. The structure should be:\n" +
+                "{\n" +
+                StringUtils.createJsonComponent("nativeWord", "<word in native language>") + ",\n" +
+                StringUtils.createJsonComponent("targetWord", "<word in target language>") + ",\n" +
+                StringUtils.createJsonComponent("targetSentence", "<sentence in target language>") + "\n" +
+                "}\n" +
+                "\n\nThe word is " + targetWord + " and the target language is " + language.getName() + ".\n";
     }
 
     @Override
-    public String generatePromptForSentencePair(String word, Language language, Options options) {
-        // Create JSON payload
-        return "Generate a sentence pair in JSON format. The JSON should include a very basic sentence in the target language and its translation in the native language. The structure should be:\n" +
-                "{\n" + "  \"nativeSentence\": \"<sentence in native language>\"\n" + "  \"targetSentence\": \"<sentence in target language>\"\n" + "}\n" +
-                "\nThe word is " + word + " and the target language is " + language.getName() + ".\n";
+    public String generatePromptForSentenceFlashcard(String targetWord, Language language, Options options) {
+        return "Given a word in a target language generate the following JSON.\n" +
+                "The JSON should include the word translated to English, the target word itself and a very basic sentence in the target language. The structure should be:\n" +
+                "{\n" +
+                StringUtils.createJsonComponent("nativeSentence", "<sentence in native language>") + ",\n" +
+                StringUtils.createJsonComponent("targetSentence", "<sentence in target language>") + "\n" +
+                "}\n" +
+                "\n\nThe word is " + targetWord + " and the target language is " + language.getName() + ".\n";
     }
 }

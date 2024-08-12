@@ -16,4 +16,14 @@ class StringUtilsTest {
 
         assertThat(actualOutput).isEqualTo(expectedOutput);
     }
+
+    @Test
+    void createJsonComponent() {
+        String key = "mykey";
+        String value = "myvalue";
+
+        String actualOutput = StringUtils.createJsonComponent(key, value);
+
+        assertThat(actualOutput).isEqualTo("\"mykey\": \"myvalue\"");
+    }
 }

@@ -9,7 +9,7 @@ import org.jakegodsall.models.Options;
  */
 public interface PromptService {
     /**
-     * Generates the request body for the OpenAI API call.
+     * Generates the request body for the OpenAI API call using a provided prompt.
      *
      * @param prompt the prompt to include in the request.
      * @return the JSON string representing the request body.
@@ -18,22 +18,22 @@ public interface PromptService {
     String generateRequestBody(String prompt) throws JsonProcessingException;
 
     /**
-     * Generates the prompt for sentence creation in the target language.
+     * Generates the prompt for the API to return the desired format for a {@link org.jakegodsall.models.flashcards.WordFlashcard}.
      *
-     * @param word     the word to include in the sentence.
+     * @param targetWord     the word in the target language to include in the sentence.
      * @param language the language to use.
      * @param options  additional options for sentence generation.
      * @return the generated prompt.
      */
-    String generatePromptForSingleSentence(String word, Language language, Options options);
+    String generatePromptForWordFlashcard(String targetWord, Language language, Options options);
 
     /**
-     * Generates the prompt for sentence pair creation in both the native language and target language.
+     * Generates the prompt for the API to return the desired format for a {@link org.jakegodsall.models.flashcards.SentenceFlashcard}.
      *
-     * @param word     the word to include in the sentences.
+     * @param targetWord     the word in the target language to include in the sentences.
      * @param language the language to use.
      * @param options  additional options for sentence generation.
      * @return the generated prompt. Format: {"nativeSentence": <sentence in native language>, "targetSentence": <sentence in target language>}
      */
-    String generatePromptForSentencePair(String word, Language language, Options options);
+    String generatePromptForSentenceFlashcard(String targetWord, Language language, Options options);
 }
