@@ -1,5 +1,6 @@
 package org.jakegodsall.view.cli;
 
+import lombok.RequiredArgsConstructor;
 import org.jakegodsall.config.LanguageConfig;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
@@ -11,23 +12,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class CommandLineInterface {
     private final FlashcardService flashcardService = new FlashcardServiceGPTImpl();
 
     Map<String, String> languages = LanguageConfig.getAllLanguageNames();
 
+    private final ApiKeyHandler apiKeyHandler;
+
     public void main() {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))){
-            ApiKeyHandler.handle(bufferedReader);
-
+            apiKeyHandler.handle(bufferedReader);
             Language chosenLanguage = getLanguageFromUser(bufferedReader);
             LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage, bufferedReader);
             Options selectedOptions = loh.getOptions();
 
             String word;
             while (!(word = getWordFromUser(bufferedReader)).equals("-1")) {
-                String sentence  = flashcardService.getSentence(word, chosenLanguage, selectedOptions);
-                System.out.println(sentence);
+//                SentenceFlashcard sentenceFlashcard = flashcardService.generateSentencePair(word, chosenLanguage, selectedOptions);
+//                System.out.println(sentenceFlashcard);
             }
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
@@ -48,6 +51,8 @@ public class CommandLineInterface {
         while (!validInput) {
             System.out.println("Choose the desired language from the following list (use codes):");
             input = bufferedReader.readLine();
+            if (input == null)
+                throw new IllegalArgumentException("Input cannot be null");
             if (languages.containsKey(input.toLowerCase().trim())) {
                 validInput = true;
             }

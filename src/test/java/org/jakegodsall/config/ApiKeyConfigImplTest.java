@@ -1,6 +1,7 @@
 package org.jakegodsall.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jakegodsall.config.impl.ApiKeyConfigImpl;
 import org.jakegodsall.exceptions.ApiKeyNotFoundException;
 import org.jakegodsall.utils.DirectoryUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-class ApiKeyConfigTest {
+class ApiKeyConfigImplTest {
 
     @TempDir
     File tempDir;
@@ -24,13 +25,15 @@ class ApiKeyConfigTest {
     private File configDir;
     private File configFile;
 
+    ApiKeyConfig apiKeyConfig = new ApiKeyConfigImpl();
+
     @Mock
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {
         configDir = new File(tempDir, ".flashcard-generator"); // temp-dir/.flashcard-generator/
-        configFile = new File(configDir, ApiKeyConfig.CONFIG_FILE_NAME); // temp-dir/.flashcard-generator/api_config.json
+        configFile = new File(configDir, ApiKeyConfigImpl.CONFIG_FILE_NAME); // temp-dir/.flashcard-generator/api_config.json
     }
 
     @Test
@@ -53,7 +56,7 @@ class ApiKeyConfigTest {
             throw new RuntimeException("Failed to write to the config file", ex);
         }
 
-        String actualApiKey = ApiKeyConfig.getApiKeyFromJsonFile(configDir.toString());
+        String actualApiKey = apiKeyConfig.getApiKeyFromFile(configDir.toString());
 
         assertThat(configFile.exists()).isTrue();
         assertThat(actualApiKey).isEqualTo(testApiKey);
@@ -70,7 +73,7 @@ class ApiKeyConfigTest {
         assertThat(configFile.exists()).isFalse();
 
         Exception exception = assertThrows(FileNotFoundException.class, () -> {
-            ApiKeyConfig.getApiKeyFromJsonFile(configDir.toString());
+            apiKeyConfig.getApiKeyFromFile(configDir.toString());
         });
 
         assertThat(exception.getMessage()).isEqualTo("API file does not exist");
@@ -96,7 +99,7 @@ class ApiKeyConfigTest {
         assertThat(configFile.exists()).isTrue();
 
         Exception exception = assertThrows(ApiKeyNotFoundException.class, () -> {
-            ApiKeyConfig.getApiKeyFromJsonFile(configDir.toString());
+            apiKeyConfig.getApiKeyFromFile(configDir.toString());
         });
 
         assertThat(exception.getMessage()).isEqualTo("API key not found in the file");
@@ -110,7 +113,7 @@ class ApiKeyConfigTest {
         DirectoryUtils.createHiddenConfigDirectory(configDir.toString());
 
         // Call the method
-        ApiKeyConfig.storeApiKeyInJsonFile(testApiKey, configDir.toString());
+        apiKeyConfig.storeApiKeyInFile(testApiKey, configDir.toString());
 
         // Verify
         assertThat(configDir.exists()).isTrue();
@@ -128,7 +131,7 @@ class ApiKeyConfigTest {
         String testApiKey ="testApiKey";
 
         // Call the method
-        ApiKeyConfig.storeApiKeyInJsonFile(testApiKey, configDir.toString());
+        apiKeyConfig.storeApiKeyInFile(testApiKey, configDir.toString());
 
         // Verify
         assertThat(configDir.exists()).isTrue();
@@ -146,7 +149,7 @@ class ApiKeyConfigTest {
         String testApiKey ="testApiKey";
 
         // Call the method
-        ApiKeyConfig.storeApiKeyInJsonFile(testApiKey, configDir.toString());
+        apiKeyConfig.storeApiKeyInFile(testApiKey, configDir.toString());
 
         // Verify
         assertThat(configDir.exists()).isTrue();

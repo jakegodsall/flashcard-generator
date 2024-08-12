@@ -1,0 +1,58 @@
+package org.jakegodsall.services.impl;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.jakegodsall.models.Language;
+import org.jakegodsall.models.Options;
+import org.jakegodsall.services.PromptService;
+import org.jakegodsall.utils.StringUtils;
+
+
+/**
+ * Implementation of PromptService for GPT-specific prompt generation.
+ */
+public class PromptServiceGPTImpl implements PromptService {
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    @Override
+    public String generateRequestBody(String prompt) throws JsonProcessingException {
+        ObjectNode requestBody = mapper.createObjectNode();
+        requestBody.put("model", "gpt-3.5-turbo");
+        requestBody.put("max_tokens", 500);
+
+        ArrayNode messages = mapper.createArrayNode();
+        ObjectNode userMessage = mapper.createObjectNode();
+        userMessage.put("role", "user");
+        userMessage.put("content", prompt);
+
+        messages.add(userMessage);
+        requestBody.put("messages", messages);
+
+        return mapper.writeValueAsString(requestBody);
+    }
+
+    @Override
+    public String generatePromptForWordFlashcard(String targetWord, Language language, Options options) {
+        return "Given a word in a target language generate the following JSON.\n" +
+                "The JSON should include the word translated to the native language of English, the target word itself and a very basic sentence in the target language. The structure should be:\n" +
+                "{\n" +
+                StringUtils.createJsonComponent("nativeWord", "<word in native language>") + ",\n" +
+                StringUtils.createJsonComponent("targetWord", "<word in target language>") + ",\n" +
+                StringUtils.createJsonComponent("targetSentence", "<sentence in target language>") + "\n" +
+                "}\n" +
+                "\n\nThe word is " + targetWord + " and the target language is " + language.getName() + ".\n";
+    }
+
+    @Override
+    public String generatePromptForSentenceFlashcard(String targetWord, Language language, Options options) {
+        return "Given a word in a target language generate the following JSON.\n" +
+                "The JSON should include the word translated to English, the target word itself and a very basic sentence in the target language. The structure should be:\n" +
+                "{\n" +
+                StringUtils.createJsonComponent("nativeSentence", "<sentence in native language>") + ",\n" +
+                StringUtils.createJsonComponent("targetSentence", "<sentence in target language>") + "\n" +
+                "}\n" +
+                "\n\nThe word is " + targetWord + " and the target language is " + language.getName() + ".\n";
+    }
+}
