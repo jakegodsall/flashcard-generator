@@ -22,8 +22,8 @@ public interface FlashcardService {
      * Generates a flashcard for a specific word in a target language.
      *
      * @param targetWord The word in the target language for which the flashcard should be generated.
-     * @param language   The language object that contains information about the native and target languages.
-     * @param options    Additional options for customizing the flashcard generation, such as difficulty level or format preferences.
+     * @param language   The language object that contains information about the target language.
+     * @param options    Additional options for customizing the flashcard generation.
      * @return A {@link WordFlashcard} object containing the native word, the target word, and an example sentence using the target word.
      */
     WordFlashcard getWordFlashcard(String targetWord, Language language, Options options);
@@ -32,8 +32,8 @@ public interface FlashcardService {
      * Generates a flashcard for a specific word in a target language, using full sentences.
      *
      * @param targetWord The word in the target language for which the sentence flashcard should be generated.
-     * @param language   The language object that contains information about the native and target languages.
-     * @param options    Additional options for customizing the flashcard generation, such as difficulty level or format preferences.
+     * @param language   The language object that contains information about the target language.
+     * @param options    Additional options for customizing the flashcard generation.
      * @return A {@link SentenceFlashcard} object containing a native sentence and the corresponding sentence in the target language using the target word.
      */
     SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options);

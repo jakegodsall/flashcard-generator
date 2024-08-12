@@ -6,6 +6,7 @@ import org.apache.http.util.EntityUtils;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;
+import org.jakegodsall.models.flashcards.WordFlashcard;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.HttpClientService;
 import org.jakegodsall.services.JsonParseService;
@@ -42,9 +43,9 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     }
 
     @Override
-    public String getSentence(String word, Language language, Options options) {
+    public WordFlashcard getWordFlashcard(String targetWord, Language language, Options options) {
         try {
-            String prompt = promptGenerator.generatePromptForSingleSentence(word, language, options);
+            String prompt = promptGenerator.generatePromptForSingleSentence(targetWord, language, options);
             String requestBody = promptGenerator.generateRequestBody(prompt);
             HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
             HttpEntity responseEntity = response.getEntity();
@@ -52,12 +53,11 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             return jsonParseService.parseSentence(result);
         } catch (IOException ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
-            return "";
         }
     }
 
     @Override
-    public SentenceFlashcard generateSentencePair(String word, Language language, Options options) {
+    public SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options) {
         try {
             String prompt = promptGenerator.generatePromptForSentencePair(word, language, options);
             String requestBody = promptGenerator.generateRequestBody(prompt);
