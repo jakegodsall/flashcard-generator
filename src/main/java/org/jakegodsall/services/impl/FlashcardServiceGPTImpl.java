@@ -5,7 +5,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
-import org.jakegodsall.models.SentencePair;
+import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.HttpClientService;
 import org.jakegodsall.services.JsonParseService;
@@ -57,7 +57,7 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     }
 
     @Override
-    public SentencePair generateSentencePair(String word, Language language, Options options) {
+    public SentenceFlashcard generateSentencePair(String word, Language language, Options options) {
         try {
             String prompt = promptGenerator.generatePromptForSentencePair(word, language, options);
             String requestBody = promptGenerator.generateRequestBody(prompt);
@@ -68,7 +68,7 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             String foreignSentence = ""; // Extract foreign sentence from result
 
             httpClientService.close();
-            return new SentencePair(englishSentence, foreignSentence);
+            return new SentenceFlashcard(englishSentence, foreignSentence);
         } catch (IOException ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
             return null;

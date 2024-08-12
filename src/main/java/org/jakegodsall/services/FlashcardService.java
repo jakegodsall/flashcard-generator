@@ -2,7 +2,8 @@ package org.jakegodsall.services;
 
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
-import org.jakegodsall.models.SentencePair;
+import org.jakegodsall.models.flashcards.SentenceFlashcard;
+import org.jakegodsall.models.flashcards.WordFlashcard;
 
 import java.util.List;
 
@@ -18,31 +19,22 @@ public interface FlashcardService {
     List<String> getAvailableModels();
 
     /**
-     * Generates a sentence using the given word, language, and options.
+     * Generates a flashcard for a specific word in a target language.
      *
-     * @param word     the word to include in the sentence.
-     * @param language the language to use.
-     * @param options  additional options for sentence generation.
-     * @return a generated sentence.
+     * @param targetWord The word in the target language for which the flashcard should be generated.
+     * @param language   The language object that contains information about the native and target languages.
+     * @param options    Additional options for customizing the flashcard generation, such as difficulty level or format preferences.
+     * @return A {@link WordFlashcard} object containing the native word, the target word, and an example sentence using the target word.
      */
-    String getSentence(String word, Language language, Options options);
+    WordFlashcard getWordFlashcard(String targetWord, Language language, Options options);
 
     /**
-     * Translates a given word from a foreign language to English and provides a sentence using the word in the foreign language.
+     * Generates a flashcard for a specific word in a target language, using full sentences.
      *
-     * @param word     the word to translate.
-     * @param language the language of the word.
-     * @return a TranslationResult containing the English word, foreign word, and a sentence.
+     * @param targetWord The word in the target language for which the sentence flashcard should be generated.
+     * @param language   The language object that contains information about the native and target languages.
+     * @param options    Additional options for customizing the flashcard generation, such as difficulty level or format preferences.
+     * @return A {@link SentenceFlashcard} object containing a native sentence and the corresponding sentence in the target language using the target word.
      */
-//    TranslationResult translateWord(String word, Language language);
-
-    /**
-     * Generates a pair of sentences: one in English and one in the foreign language, translating the given word.
-     *
-     * @param word     the word to include in the sentences.
-     * @param language the language of the word.
-     * @param options  additional options for sentence generation.
-     * @return a SentencePair containing the English and foreign language sentences.
-     */
-    SentencePair generateSentencePair(String word, Language language, Options options);
+    SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options);
 }

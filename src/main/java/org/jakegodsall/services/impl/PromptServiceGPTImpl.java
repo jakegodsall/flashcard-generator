@@ -44,7 +44,7 @@ public class PromptServiceGPTImpl implements PromptService {
     @Override
     public String generatePromptForSentencePair(String word, Language language, Options options) {
         // Create JSON payload
-        return "Generate a sentence pair in JSON format. The JSON should include a very basicd sentence in the target language and its translation in the native language. The structure should be:\n" +
+        return "Generate a sentence pair in JSON format. The JSON should include a very basic sentence in the target language and its translation in the native language. The structure should be:\n" +
                 "{\n" + "  \"nativeSentence\": \"<sentence in native language>\"\n" + "  \"targetSentence\": \"<sentence in target language>\"\n" + "}\n" +
                 "\nThe word is " + word + " and the target language is " + language.getName() + ".\n";
     }
