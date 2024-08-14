@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.jakegodsall.config.LanguageConfig;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
+import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.impl.FlashcardServiceGPTImpl;
 
@@ -29,8 +30,8 @@ public class CommandLineInterface {
 
             String word;
             while (!(word = getWordFromUser(bufferedReader)).equals("-1")) {
-//                SentenceFlashcard sentenceFlashcard = flashcardService.generateSentencePair(word, chosenLanguage, selectedOptions);
-//                System.out.println(sentenceFlashcard);
+                SentenceFlashcard sentenceFlashcard = flashcardService.getSentenceFlashcard(word, chosenLanguage, selectedOptions);
+                System.out.println(sentenceFlashcard);
             }
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());

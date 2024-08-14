@@ -1,6 +1,7 @@
 package org.jakegodsall.services.impl;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -44,8 +45,11 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
     @Override
     public WordFlashcard parseWordFlashcard(String responseBody) throws JsonParseException {
         try {
+            // Get the required JSON String
+            String content = parseContentFromResponse(responseBody);
+
             // Parse the JSON into a JsonNode tree
-            JsonNode rootNode = objectMapper.readTree(responseBody);
+            JsonNode rootNode = objectMapper.readTree(content);
 
             // Navigate the JSON tree to extract the required values
             JsonNode nativeWordNode = rootNode.path("nativeWord");
@@ -74,8 +78,11 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
     @Override
     public SentenceFlashcard parseSentenceFlashcard(String responseBody) throws JsonParseException {
         try {
+            // Get the required JSON String
+            String content = parseContentFromResponse(responseBody);
+
             // Parse the JSON into a JsonNode tree
-            JsonNode rootNode = objectMapper.readTree(responseBody);
+            JsonNode rootNode = objectMapper.readTree(content);
 
             // Navigate the JSON tree to extract the required values
             JsonNode nativeSentenceNode = rootNode.path("nativeSentence");
@@ -95,5 +102,24 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
         } catch (Exception ex) {
             throw new JsonParseException("Failed to parse SentenceFlashcard JSON");
         }
+    }
+
+    public String parseContentFromResponse(String responseBody) throws JsonProcessingException {
+        // Parse the JSON into a JsonNode tree
+        JsonNode rootNode = objectMapper.readTree(responseBody);
+
+        // Navigate the JSON tree to extract the content
+        JsonNode choicesNode = rootNode.path("choices").get(0);
+        if (choicesNode.isMissingNode())
+            throw new NoSuchElementException("Missing 'choices' field in the JSON response");
+        JsonNode messageNode = choicesNode.path("message");
+        if (messageNode.isMissingNode())
+            throw new NoSuchElementException("Missing 'message' field in the JSON response");
+        JsonNode contentNode = messageNode.path("content");
+        if (contentNode.isMissingNode())
+            throw new NoSuchElementException("Missing 'content' field in the JSON response");
+
+        // Return the response
+        return contentNode.asText();
     }
 }

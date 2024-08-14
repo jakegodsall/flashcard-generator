@@ -1,6 +1,5 @@
 package org.jakegodsall.services.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -45,35 +44,8 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
 
     @Override
     public WordFlashcard getWordFlashcard(String targetWord, Language language, Options options) {
-        String result = getFlashcardResponse(targetWord, language, options);
-        if (result != null) {
-            try {
-                return jsonParseService.parseWordFlashcard(result);
-            } catch (JsonProcessingException ex) {
-                logger.log(Level.SEVERE, "Failed to parse WordFlashcard JSON", ex);
-                System.err.println("Failed to parse WordFlashcard JSON: " + ex.getMessage());
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options) {
-        String result = getFlashcardResponse(targetWord, language, options);
-        if (result != null) {
-            try {
-                return jsonParseService.parseSentenceFlashcard(result);
-            } catch (JsonProcessingException ex) {
-                logger.log(Level.SEVERE, "Failed to parse SentenceFlashcard JSON", ex);
-                System.err.println("Failed to parse SentenceFlashcard JSON: " + ex.getMessage());
-            }
-        }
-        return null;
-    }
-
-    private String getFlashcardResponse(String targetWord, Language language, Options options) {
         try {
-            // Generate the prompt to get JSON in the correct format for populating Flashcard bean
+            // Generate the prompt to get JSON in the correct format for populating WordFlashcard bean
             String prompt = promptGenerator.generatePromptForWordFlashcard(targetWord, language, options);
             // Generate HTTP POST request body
             String requestBody = promptGenerator.generateRequestBody(prompt);
@@ -81,10 +53,35 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
             // Get the result
             HttpEntity responseEntity = response.getEntity();
-            return EntityUtils.toString(responseEntity);
+            String result = EntityUtils.toString(responseEntity);
+            // Parse the result to a WordFlashcard
+            return jsonParseService.parseWordFlashcard(result);
         } catch (IOException ex) {
-            logger.log(Level.SEVERE, "HTTP request failed", ex);
-            System.err.println("HTTP request failed: " + ex.getMessage());
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            System.err.println(ex.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options) {
+        try {
+            // Generate the prompt to get JSON in the correct format for populating WordFlashcard bean
+            String prompt = promptGenerator.generatePromptForWordFlashcard(targetWord, language, options);
+            // Generate HTTP POST request body
+            String requestBody = promptGenerator.generateRequestBody(prompt);
+            // Send the POST request to the GPT API
+            HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
+            // Get the result
+            HttpEntity responseEntity = response.getEntity();
+            String result = EntityUtils.toString(responseEntity);
+            System.out.println("API RESPONSE");
+            System.out.println(result);
+            // Parse the result to a WordFlashcard
+            return jsonParseService.parseSentenceFlashcard(result);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            System.err.println(ex.getMessage());
         }
         return null;
     }
