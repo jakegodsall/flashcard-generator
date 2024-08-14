@@ -35,8 +35,8 @@ public class PromptServiceGPTImpl implements PromptService {
 
     @Override
     public String generatePromptForWordFlashcard(String targetWord, Language language, Options options) {
-        return "Given a word in a target language generate the following JSON.\n" +
-                "The JSON should include the word translated to the native language of English, the target word itself and a very basic sentence in the target language. The structure should be:\n" +
+        return generateOriginalPrompt() +
+                "The word translated to the native language of English.\nThe target word itself.\nA very basic sentence in the target language.\nThe structure should be:\n" +
                 "{\n" +
                 StringUtils.createJsonComponent("nativeWord", "<word in native language>") + ",\n" +
                 StringUtils.createJsonComponent("targetWord", "<word in target language>") + ",\n" +
@@ -47,12 +47,16 @@ public class PromptServiceGPTImpl implements PromptService {
 
     @Override
     public String generatePromptForSentenceFlashcard(String targetWord, Language language, Options options) {
-        return "Given a word in a target language generate the following JSON.\n" +
-                "The JSON should include the word translated to English, the target word itself and a very basic sentence in the target language. The structure should be:\n" +
+        return generateOriginalPrompt() +
+                "The word translated to the native language of English.\nThe target word itself.\nA very basic sentence in the target language.\nThe structure should be:\n" +
                 "{\n" +
                 StringUtils.createJsonComponent("nativeSentence", "<sentence in native language>") + ",\n" +
                 StringUtils.createJsonComponent("targetSentence", "<sentence in target language>") + "\n" +
                 "}\n" +
                 "\n\nThe word is " + targetWord + " and the target language is " + language.getName() + ".\n";
+    }
+
+    public String generateOriginalPrompt() {
+        return "Given a word in a target language generate the following JSON.\n\"The JSON should include:\n";
     }
 }
