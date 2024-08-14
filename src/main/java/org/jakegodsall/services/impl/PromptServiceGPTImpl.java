@@ -56,7 +56,7 @@ public class PromptServiceGPTImpl implements PromptService {
                 "\n\nThe word is " + targetWord + " and the target language is " + language.getName() + ".\n";
     }
 
-    public String generateOriginalPrompt() {
+    private String generateOriginalPrompt() {
         return "Given a word in a target language generate the following JSON.\n\"The JSON should include:\n";
     }
 }

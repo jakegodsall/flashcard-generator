@@ -20,7 +20,7 @@ public interface HttpClientService {
     /**
      * Sends a POST request to the specified URL with the given JSON body.
      *
-     * @param url  the URL to send the POST request to.
+     * @param url the URL to send the POST request to.
      * @param payload the JSON body to include in the POST request.
      * @return the HTTP response.
      * @throws IOException if an I/O error occurs.

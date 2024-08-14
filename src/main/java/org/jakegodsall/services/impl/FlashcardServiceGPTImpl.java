@@ -44,36 +44,43 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
 
     @Override
     public WordFlashcard getWordFlashcard(String targetWord, Language language, Options options) {
-//        try {
-//            String prompt = promptGenerator.generatePromptForSingleSentence(targetWord, language, options);
-//            String requestBody = promptGenerator.generateRequestBody(prompt);
-//            HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
-//            HttpEntity responseEntity = response.getEntity();
-//            String result = EntityUtils.toString(responseEntity);
-//            return jsonParseService.parseSentence(result);
-//        } catch (IOException ex) {
-//            logger.log(Level.SEVERE, ex.getMessage(), ex);
-//        }
+        try {
+            // Generate the prompt to get JSON in the correct format for populating WordFlashcard bean
+            String prompt = promptGenerator.generatePromptForWordFlashcard(targetWord, language, options);
+            // Generate HTTP POST request body
+            String requestBody = promptGenerator.generateRequestBody(prompt);
+            // Send the POST request to the GPT API
+            HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
+            // Get the result
+            HttpEntity responseEntity = response.getEntity();
+            String result = EntityUtils.toString(responseEntity);
+            // Parse the result to a WordFlashcard
+            return jsonParseService.parseWordFlashcard(result);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            System.err.println(ex.getMessage());
+        }
         return null;
     }
 
     @Override
     public SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options) {
-//        try {
-//            String prompt = promptGenerator.generatePromptForSentencePair(word, language, options);
-//            String requestBody = promptGenerator.generateRequestBody(prompt);
-//            HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
-//            HttpEntity responseEntity = response.getEntity();
-//            String result = EntityUtils.toString(responseEntity);
-//            String englishSentence = ""; // Extract English sentence from result
-//            String foreignSentence = ""; // Extract foreign sentence from result
-//
-//            httpClientService.close();
-//            return new SentenceFlashcard(englishSentence, foreignSentence);
-//        } catch (IOException ex) {
-//            logger.log(Level.SEVERE, ex.getMessage(), ex);
-//            return null;
-//        }
+        try {
+            // Generate the prompt to get JSON in the correct format for populating WordFlashcard bean
+            String prompt = promptGenerator.generatePromptForWordFlashcard(targetWord, language, options);
+            // Generate HTTP POST request body
+            String requestBody = promptGenerator.generateRequestBody(prompt);
+            // Send the POST request to the GPT API
+            HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
+            // Get the result
+            HttpEntity responseEntity = response.getEntity();
+            String result = EntityUtils.toString(responseEntity);
+            // Parse the result to a WordFlashcard
+            return jsonParseService.parseSentenceFlashcard(result);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            System.err.println(ex.getMessage());
+        }
         return null;
     }
 }
