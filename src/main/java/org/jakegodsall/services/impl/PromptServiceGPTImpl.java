@@ -48,9 +48,9 @@ public class PromptServiceGPTImpl implements PromptService {
     @Override
     public String generatePromptForSentenceFlashcard(String targetWord, Language language, Options options) {
         return generateOriginalPrompt() +
-                "The word translated to the native language of English.\nThe target word itself.\nA very basic sentence in the target language.\nThe structure should be:\n" +
+                "The word translated to the native language of English.\nA very basic sentence in the target language using the provided word.\nThat same sentence translated into the native language of English\nThe structure should be:\n" +
                 "{\n" +
-                StringUtils.createJsonComponent("nativeSentence", "<sentence in native language>") + ",\n" +
+                StringUtils.createJsonComponent("nativeSentence", "<sentence in native English language>") + ",\n" +
                 StringUtils.createJsonComponent("targetSentence", "<sentence in target language>") + "\n" +
                 "}\n" +
                 "\n\nThe word is " + targetWord + " and the target language is " + language.getName() + ".\n";

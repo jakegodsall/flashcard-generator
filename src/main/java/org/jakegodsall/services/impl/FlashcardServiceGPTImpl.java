@@ -67,7 +67,9 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     public SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options) {
         try {
             // Generate the prompt to get JSON in the correct format for populating WordFlashcard bean
-            String prompt = promptGenerator.generatePromptForWordFlashcard(targetWord, language, options);
+            String prompt = promptGenerator.generatePromptForSentenceFlashcard(targetWord, language, options);
+            System.out.println("PROMPT");
+            System.out.println(prompt);
             // Generate HTTP POST request body
             String requestBody = promptGenerator.generateRequestBody(prompt);
             // Send the POST request to the GPT API
