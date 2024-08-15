@@ -36,4 +36,6 @@ public interface PromptService {
      * @return the generated prompt. Format: {"nativeSentence": <sentence in native language>, "targetSentence": <sentence in target language>}
      */
     String generatePromptForSentenceFlashcard(String targetWord, Language language, Options options);
+
+    String generatePromptForSubsequentWord(String targetWord);
 }

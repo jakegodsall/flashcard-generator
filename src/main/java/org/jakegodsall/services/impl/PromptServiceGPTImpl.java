@@ -35,7 +35,7 @@ public class PromptServiceGPTImpl implements PromptService {
 
     @Override
     public String generatePromptForWordFlashcard(String targetWord, Language language, Options options) {
-        return generateOriginalPrompt() +
+        return generateOriginalPromptTemplate() +
                 "The word translated to the native language of English.\nThe target word itself.\nA very basic sentence in the target language.\nThe structure should be:\n" +
                 "{\n" +
                 StringUtils.createJsonComponent("nativeWord", "<word in native language>") + ",\n" +
@@ -47,7 +47,7 @@ public class PromptServiceGPTImpl implements PromptService {
 
     @Override
     public String generatePromptForSentenceFlashcard(String targetWord, Language language, Options options) {
-        return generateOriginalPrompt() +
+        return generateOriginalPromptTemplate() +
                 "The word translated to the native language of English.\nA very basic sentence in the target language using the provided word.\nThat same sentence translated into the native language of English\nThe structure should be:\n" +
                 "{\n" +
                 StringUtils.createJsonComponent("nativeSentence", "<sentence in native English language>") + ",\n" +
@@ -56,7 +56,12 @@ public class PromptServiceGPTImpl implements PromptService {
                 "\n\nThe word is " + targetWord + " and the target language is " + language.getName() + ".\n";
     }
 
-    private String generateOriginalPrompt() {
+    @Override
+    public String generatePromptForSubsequentWord(String targetWord) {
+        return "The next word is " + targetWord;
+    }
+
+    private String generateOriginalPromptTemplate() {
         return "Given a word in a target language generate the following JSON.\n\"The JSON should include:\n";
     }
 }
