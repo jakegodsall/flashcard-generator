@@ -5,9 +5,7 @@ import org.jakegodsall.config.LanguageConfig;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
 import org.jakegodsall.models.enums.FlashcardType;
-import org.jakegodsall.models.enums.Mode;
-import org.jakegodsall.models.flashcards.SentenceFlashcard;
-import org.jakegodsall.models.flashcards.WordFlashcard;
+import org.jakegodsall.models.enums.InputMode;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.impl.FlashcardServiceGPTImpl;
 
@@ -39,21 +37,21 @@ public class CommandLineInterface {
             // Get flashcard type
             FlashcardType flashcardType = getFlashcardType(bufferedReader);
 
-            // Get mode (interactive or file mode)
-            Mode mode = getMode(bufferedReader);
+            // Get input mode
+            InputMode inputMode = getInputMode(bufferedReader);
 
-            if (mode == Mode.FILE) {
-                String word;
-                while (!(word = getWordFromUser(bufferedReader)).equals("-1")) {
-                    if (flashcardType == FlashcardType.SENTENCE) {
-                        SentenceFlashcard sentenceFlashcard = flashcardService.getSentenceFlashcard(word, chosenLanguage, selectedOptions);
-                        System.out.println(sentenceFlashcard);
-                    } else if (flashcardType == FlashcardType.WORD) {
-                        WordFlashcard wordFlashcard = flashcardService.getWordFlashcard(word, chosenLanguage, selectedOptions);
-                        System.out.println(wordFlashcard);
-                    }
-                }
-            }
+//            if (inputMode == InputMode.FILE) {
+//                String word;
+//                while (!(word = getWordFromUser(bufferedReader)).equals("-1")) {
+//                    if (flashcardType == FlashcardType.SENTENCE) {
+//                        SentenceFlashcard sentenceFlashcard = flashcardService.getSentenceFlashcard(word, chosenLanguage, selectedOptions);
+//                        System.out.println(sentenceFlashcard);
+//                    } else if (flashcardType == FlashcardType.WORD) {
+//                        WordFlashcard wordFlashcard = flashcardService.getWordFlashcard(word, chosenLanguage, selectedOptions);
+//                        System.out.println(wordFlashcard);
+//                    }
+//                }
+//            }
 
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
@@ -85,24 +83,40 @@ public class CommandLineInterface {
         return chosenLanguage;
     }
 
-    public Mode getMode(BufferedReader bufferedReader) throws IOException {
+    public InputMode getInputMode(BufferedReader bufferedReader) throws IOException {
         System.out.println("Choose an input mode:");
         System.out.println("[1] Interactive Mode");
-        System.out.println("[2] File Mode");
+        System.out.println("[2] Comma-separated String Mode");
+        System.out.println("[3] Plain Text File Mode");
+
         boolean validInput = false;
         String input = "";
-        Mode result = Mode.INTERACTIVE;
+        InputMode result = InputMode.INTERACTIVE;  // Default to Interactive Mode
+
         while (!validInput) {
             input = bufferedReader.readLine();
             if (input == null) {
                 throw new IllegalArgumentException("Input cannot be null");
             }
-            if (input.equals("1")) {
-                validInput = true;
-            }
-            if (input.equals("2")) {
-                result = Mode.FILE;
-                validInput = true;
+            switch (input) {
+                case "1":
+                    result = InputMode.INTERACTIVE;
+                    validInput = true;
+                    break;
+                case "2":
+                    result = InputMode.COMMA_SEPARATED_STRING;
+                    validInput = true;
+                    break;
+                case "3":
+                    result = InputMode.PLAIN_TEXT_FILE;
+                    validInput = true;
+                    break;
+                default:
+                    System.out.println("Invalid input. Please choose a valid option:");
+                    System.out.println("[1] Interactive Mode");
+                    System.out.println("[2] Comma-separated String Mode");
+                    System.out.println("[3] Plain Text File Mode");
+                    break;
             }
         }
         return result;
