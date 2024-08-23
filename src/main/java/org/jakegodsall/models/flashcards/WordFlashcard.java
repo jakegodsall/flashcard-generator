@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 @Builder
-public class WordFlashcard {
+public class WordFlashcard extends Flashcard {
     String nativeWord;
     String targetWord;
     String exampleTargetSentence;

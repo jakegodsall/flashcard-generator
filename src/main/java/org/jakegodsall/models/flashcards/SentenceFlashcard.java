@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class SentenceFlashcard {
+public class SentenceFlashcard extends Flashcard {
     private String nativeSentence;
     private String targetSentence;
 

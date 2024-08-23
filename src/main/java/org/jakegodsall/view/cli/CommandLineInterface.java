@@ -42,17 +42,19 @@ public class CommandLineInterface {
             // Get mode (interactive or file mode)
             Mode mode = getMode(bufferedReader);
 
-            String word;
-            while (!(word = getWordFromUser(bufferedReader)).equals("-1")) {
-                if (flashcardType == FlashcardType.SENTENCE) {
-                    SentenceFlashcard sentenceFlashcard = flashcardService.getSentenceFlashcard(word, chosenLanguage, selectedOptions);
-                    System.out.println(sentenceFlashcard);
-                } else if (flashcardType == FlashcardType.WORD) {
-                    WordFlashcard wordFlashcard = flashcardService.getWordFlashcard(word, chosenLanguage, selectedOptions);
-                    System.out.println(wordFlashcard);
+            if (mode == Mode.FILE) {
+                String word;
+                while (!(word = getWordFromUser(bufferedReader)).equals("-1")) {
+                    if (flashcardType == FlashcardType.SENTENCE) {
+                        SentenceFlashcard sentenceFlashcard = flashcardService.getSentenceFlashcard(word, chosenLanguage, selectedOptions);
+                        System.out.println(sentenceFlashcard);
+                    } else if (flashcardType == FlashcardType.WORD) {
+                        WordFlashcard wordFlashcard = flashcardService.getWordFlashcard(word, chosenLanguage, selectedOptions);
+                        System.out.println(wordFlashcard);
+                    }
                 }
-
             }
+
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
         }
