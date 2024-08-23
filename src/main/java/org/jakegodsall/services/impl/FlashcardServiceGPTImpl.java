@@ -47,6 +47,8 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
         try {
             // Generate the prompt to get JSON in the correct format for populating WordFlashcard bean
             String prompt = promptGenerator.generatePromptForWordFlashcard(targetWord, language, options);
+            System.out.println("PROMPT");
+            System.out.println(prompt);
             // Generate HTTP POST request body
             String requestBody = promptGenerator.generateRequestBody(prompt);
             // Send the POST request to the GPT API
@@ -54,6 +56,8 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             // Get the result
             HttpEntity responseEntity = response.getEntity();
             String result = EntityUtils.toString(responseEntity);
+            System.out.println("API RESPONSE");
+            System.out.println(result);
             // Parse the result to a WordFlashcard
             return jsonParseService.parseWordFlashcard(result);
         } catch (IOException ex) {

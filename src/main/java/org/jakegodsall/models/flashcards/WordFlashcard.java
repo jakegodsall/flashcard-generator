@@ -15,6 +15,6 @@ public class WordFlashcard {
 
     @Override
     public String toString() {
-        return nativeWord + ": " + targetWord;
+        return nativeWord + " - " + targetWord + " - " + exampleTargetSentence;
     }
 }
