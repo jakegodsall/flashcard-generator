@@ -42,7 +42,6 @@ public class CommandLineInterface {
             // Get mode (interactive or file mode)
             Mode mode = getMode(bufferedReader);
 
-
             String word;
             while (!(word = getWordFromUser(bufferedReader)).equals("-1")) {
                 if (flashcardType == FlashcardType.SENTENCE) {
@@ -59,7 +58,7 @@ public class CommandLineInterface {
         }
     }
 
-    private void printLanguageOptions() {
+    public void printLanguageOptions() {
         System.out.println("Languages:");
         for (Map.Entry<String, String> entry : languages.entrySet()) {
             System.out.println("[" + entry.getKey() + "] - " + entry.getValue());
@@ -84,7 +83,7 @@ public class CommandLineInterface {
         return chosenLanguage;
     }
 
-    private Mode getMode(BufferedReader bufferedReader) throws IOException {
+    public Mode getMode(BufferedReader bufferedReader) throws IOException {
         System.out.println("Choose an input mode:");
         System.out.println("[1] Interactive Mode");
         System.out.println("[2] File Mode");
@@ -97,17 +96,17 @@ public class CommandLineInterface {
                 throw new IllegalArgumentException("Input cannot be null");
             }
             if (input.equals("1")) {
-                break;
+                validInput = true;
             }
             if (input.equals("2")) {
                 result = Mode.FILE;
-                break;
+                validInput = true;
             }
         }
         return result;
     }
 
-    private FlashcardType getFlashcardType(BufferedReader bufferedReader) throws IOException {
+    public FlashcardType getFlashcardType(BufferedReader bufferedReader) throws IOException {
         System.out.println("Choose a flashcard type:");
         System.out.println("[1] Word Flashcard");
         System.out.println("[2] Sentence Flashcard");
@@ -119,19 +118,17 @@ public class CommandLineInterface {
             if (input == null)
                 throw new IllegalArgumentException("Input cannot be null");
             if (input.equals("1")) {
-                break;
+                validInput = true;
             }
             if (input.equals("2")) {
                 result = FlashcardType.SENTENCE;
-                break;
+                validInput = true;
             }
         }
         return result;
     }
 
-
-
-    private String getWordFromUser(BufferedReader bufferedReader) throws IOException {
+    public String getWordFromUser(BufferedReader bufferedReader) throws IOException {
         System.out.println("Enter a word:");
         return bufferedReader.readLine();
     }
