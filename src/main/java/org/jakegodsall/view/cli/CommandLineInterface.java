@@ -6,12 +6,11 @@ import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
 import org.jakegodsall.models.enums.FlashcardType;
 import org.jakegodsall.models.enums.InputMode;
+import org.jakegodsall.models.enums.OutputMode;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.InputService;
-import org.jakegodsall.services.impl.FlashcardServiceGPTImpl;
-import org.jakegodsall.services.impl.InputServiceCommaSeparatedStringMode;
-import org.jakegodsall.services.impl.InputServiceInteractiveMode;
-import org.jakegodsall.services.impl.InputServicePlainTextFileMode;
+import org.jakegodsall.services.OutputService;
+import org.jakegodsall.services.impl.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,6 +25,7 @@ public class CommandLineInterface {
 
     private final ApiKeyHandler apiKeyHandler;
     private InputService inputService;
+    private OutputService outputService;
 
     public void main() {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
@@ -54,7 +54,12 @@ public class CommandLineInterface {
             inputService.getInput(flashcardType, chosenLanguage, selectedOptions);
 
             // Get output mode
-            OutputM
+            OutputMode outputMode = getOutputMode(bufferedReader);
+
+            switch (outputMode) {
+                case OutputMode.CSV -> outputService = new OutputServiceCsvMode();
+                case OutputMode.JSON -> outputService = new OutputServiceJsonMode();
+            }
 
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
@@ -119,6 +124,36 @@ public class CommandLineInterface {
                     System.out.println("[1] Interactive Mode");
                     System.out.println("[2] Comma-separated String Mode");
                     System.out.println("[3] Plain Text File Mode");
+                    break;
+            }
+        }
+        return result;
+    }
+
+    public OutputMode getOutputMode(BufferedReader bufferedReader) throws IOException {
+        System.out.println("Choose an output mode:");
+        System.out.println("[1] CSV");
+        System.out.println("[2] JSON");
+
+        boolean validInput = false;
+        String input = "";
+        OutputMode result = OutputMode.CSV;
+
+        while (!validInput) {
+            input = bufferedReader.readLine().trim();
+            switch (input) {
+                case "1":
+                    result = OutputMode.CSV;
+                    validInput = true;
+                    break;
+                case "2":
+                    result = OutputMode.JSON;
+                    validInput = true;
+                    break;
+                default:
+                    System.out.println("Invalid input. Please choose a valid option:");
+                    System.out.println("[1] CSV");
+                    System.out.println("[2] JSON");
                     break;
             }
         }
