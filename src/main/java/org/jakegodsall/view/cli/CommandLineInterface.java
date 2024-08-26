@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 public class CommandLineInterface {
-    private final FlashcardService flashcardService = new FlashcardServiceGPTImpl();
+    private final FlashcardService flashcardService;
 
     Map<String, String> languages = LanguageConfig.getAllLanguageNames();
 

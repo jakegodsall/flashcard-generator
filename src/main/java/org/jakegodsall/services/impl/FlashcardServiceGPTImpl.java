@@ -1,5 +1,6 @@
 package org.jakegodsall.services.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -20,14 +21,15 @@ import java.util.logging.Logger;
 /**
  * Implementation of the FlashcardService using OpenAI's GPT API.
  */
+@RequiredArgsConstructor
 public class FlashcardServiceGPTImpl implements FlashcardService {
     private static final String API_MODELS_URL = "https://api.openai.com/v1/models";
     private static final String API_CHAT_URL = "https://api.openai.com/v1/chat/completions";
     private static final Logger logger = Logger.getLogger(FlashcardServiceGPTImpl.class.getName());
 
-    private final HttpClientService httpClientService = new HttpClientServiceGPTImpl();
-    private final JsonParseService jsonParseService = new JsonParseServiceGPTImpl();
-    private final PromptService promptGenerator = new PromptServiceGPTImpl();
+    private final HttpClientService httpClientService;
+    private final JsonParseService jsonParseService;
+    private final PromptService promptGenerator;
 
     @Override
     public List<String> getAvailableModels() {
