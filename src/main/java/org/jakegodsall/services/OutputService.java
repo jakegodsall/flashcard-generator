@@ -17,17 +17,6 @@ import java.util.List;
  */
 public interface OutputService {
     /**
-     * Generates a formatted output from the provided List of {@link Flashcard}
-     * objects. The exact format of the output (e.g., CSV, JSON) is determined
-     * by the specific implementation of this interface.
-     *
-     * @param flashcards a {@code List} of {@link Flashcard} objects to be
-     *                   formatted.
-     * @return a {@code String} representing the formatted output.
-     */
-    String generateOutput(List<Flashcard> flashcards);
-
-    /**
      * Writes the formatted output of the provided list of {@link Flashcard}
      * objects to a specified file. The exact format of the output (e.g., CSV,
      * JSON) is determined by the specific implementation of this interface.

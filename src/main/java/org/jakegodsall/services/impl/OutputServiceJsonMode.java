@@ -8,11 +8,6 @@ import java.util.List;
 
 public class OutputServiceJsonMode implements OutputService {
     @Override
-    public String generateOutput(List<Flashcard> flashcards) {
-        return "";
-    }
-
-    @Override
     public void writeToFile(List<Flashcard> flashcards, String filePath) throws IOException {
 
     }

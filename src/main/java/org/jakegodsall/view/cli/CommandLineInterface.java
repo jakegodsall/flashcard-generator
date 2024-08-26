@@ -7,6 +7,7 @@ import org.jakegodsall.models.Options;
 import org.jakegodsall.models.enums.FlashcardType;
 import org.jakegodsall.models.enums.InputMode;
 import org.jakegodsall.models.enums.OutputMode;
+import org.jakegodsall.models.flashcards.Flashcard;
 import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.InputService;
 import org.jakegodsall.services.OutputService;
@@ -15,6 +16,7 @@ import org.jakegodsall.services.impl.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -51,7 +53,7 @@ public class CommandLineInterface {
                 case InputMode.PLAIN_TEXT_FILE -> inputService = new InputServicePlainTextFileMode(bufferedReader, flashcardService);
             }
 
-            inputService.getInput(flashcardType, chosenLanguage, selectedOptions);
+            List<Flashcard> flashcards = inputService.getInput(flashcardType, chosenLanguage, selectedOptions);
 
             // Get output mode
             OutputMode outputMode = getOutputMode(bufferedReader);
@@ -60,6 +62,8 @@ public class CommandLineInterface {
                 case OutputMode.CSV -> outputService = new OutputServiceCsvMode();
                 case OutputMode.JSON -> outputService = new OutputServiceJsonMode();
             }
+
+            outputService.writeToFile(flashcards, "test.csv");
 
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
