@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import lombok.RequiredArgsConstructor;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.models.flashcards.WordFlashcard;
 import org.jakegodsall.services.JsonParseService;
@@ -18,8 +19,9 @@ import java.util.NoSuchElementException;
 /**
  * Implementation of JsonParseService for GPT-specific JSON parsing.
  */
+@RequiredArgsConstructor
 public class JsonParseServiceGPTImpl implements JsonParseService {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
     public List<String> parseModels(String json) throws IOException {
@@ -53,14 +55,17 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
 
             // Navigate the JSON tree to extract the required values
             JsonNode nativeWordNode = rootNode.path("nativeWord");
-            if (nativeWordNode.isMissingNode())
+            if (nativeWordNode.isMissingNode()) {
                 throw new NoSuchElementException("Missing 'nativeWord' field in the JSON response");
+            }
             JsonNode targetWordNode = rootNode.path("targetWord");
-            if (targetWordNode.isMissingNode())
+            if (targetWordNode.isMissingNode()) {
                 throw new NoSuchElementException("Missing 'targetWord' field in the JSON response");
+            }
             JsonNode targetSentenceNode = rootNode.path("targetSentence");
-            if (targetSentenceNode.isMissingNode())
+            if (targetSentenceNode.isMissingNode()) {
                 throw new NoSuchElementException("Missing 'targetSentence' field in the JSON response");
+            }
 
             // Encapsulate in WordFlashcard object and return
             return new WordFlashcard(
@@ -68,10 +73,9 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
                     targetWordNode.asText(),
                     targetSentenceNode.asText()
             );
-        } catch (NoSuchElementException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new JsonParseException("Failed to parse WordFlashcard JSON");
+        } catch (JsonProcessingException ex) {
+            // Handle specific JSON processing exceptions
+            throw new JsonParseException("Failed to parse JSON");
         }
     }
 
@@ -109,10 +113,13 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
         JsonNode rootNode = objectMapper.readTree(responseBody);
 
         // Navigate the JSON tree to extract the content
-        JsonNode choicesNode = rootNode.path("choices").get(0);
-        if (choicesNode.isMissingNode())
+        JsonNode choicesNode = rootNode.path("choices");
+        if (choicesNode.isMissingNode() || !choicesNode.isArray() || choicesNode.isEmpty())
             throw new NoSuchElementException("Missing 'choices' field in the JSON response");
-        JsonNode messageNode = choicesNode.path("message");
+        JsonNode firstChoiceNode = choicesNode.get(0);
+        if (firstChoiceNode.isMissingNode())
+            throw new NoSuchElementException("'choices' array is empty");
+        JsonNode messageNode = firstChoiceNode.path("message");
         if (messageNode.isMissingNode())
             throw new NoSuchElementException("Missing 'message' field in the JSON response");
         JsonNode contentNode = messageNode.path("content");
