@@ -4,12 +4,12 @@ This project is a flashcard generator application that uses the GPT API to creat
 
 ## Features
 
-- Generate sentences using a specified word in various languages.
-- Support for different language-specific options, such as choosing grammatical tense or including stress symbols for Russian.
+- Generate flashcards using a specified word or set of words in various languages.
+- Support for different language-specific options, such as choosing grammatical tense or including stress symbols.
 - Command-line interface for easy interaction.
-- Export generated sentences to a CSV file in the format: `native_language_word, foreign_language_word, example_sentence`.
-- Easily extendable to support more languages and advanced sentence structures.
 - Configuration for language-specific features via a JSON file.
+- Export generated flashcards to multiple file formats (CSV, JSON).
+- Easily extendable to support more languages..
 
 ## Requirements
 
@@ -65,29 +65,25 @@ It is important to keep your OpenAI API key secure and not share it with others.
 
 The API key allows access to your OpenAI account, and usage charges may apply depending on the OpenAI services you use through the application.
 
-## Usage
+## Application Modes
 
-1. Enter a word
+The Flashcard Generator application is designed to be flexible and user-friendly, offering multiple modes for both inputting data and exporting the generated flashcards. 
+This flexibility allows you to choose the mode that best fits your workflow and preferences.
 
-    When prompted, enter the word you want to use in the sentence.
+### Input Modes
 
-2. Enter the language code
+1. **Interactive Mode:**  Interactive Mode is designed for step-by-step interaction. In this mode, the application prompts you to enter words or phrases one at a time. After you input each word or phrase, the application generates a flashcard for it using the OpenAI API. Each flashcard is printed to the console and stored in memory for exporting later.
+2. **Comma Separated String Mode:** In Comma Separated String Mode, you provide a single string containing multiple words or phrases separated by commas. The application will then process each item in the string and generate flashcards for each one. Each flashcard is stored in memory for exporting later.
+3. **Plain Text File Mode:** In Plain Text File Mode, you can input data by providing a plain text file where each line contains a word or phrase. The application reads the file and generates flashcards for each line. Each flashcard is stored in memory for exporting later.
 
-    Provide the language code (e.g., en for English, ru for Russian, es for Spanish).
+### Output Modes
 
-3. Language-specific options
+1. **CSV Mode:** Each flashcard is a separate line in a CSV file where fields are separated by commas.
+2. **JSON Mode:** Flashcards are exported as a JSON file.
 
-    If applicable, you will be prompted for additional options such as including stress symbols for Russian.
+## Languages Configuration
 
-4. View the generated sentence
-
-    The application will generate and display a sentence using the provided word.
-
-5. Export to CSV
-
-    Generated sentences are saved in sentences.csv.
-
-## Configuration
+The Flashcard Generator application allows you to tailor the flashcard generation process to the nuances of different languages.
 
 Language-specific features are configured via the `language_config.json` file located in the `src/main/resources` directory. This file includes options for stress symbols, formality, gender, dialects, politeness levels, and conjugation tenses.
 
@@ -115,6 +111,14 @@ Example `language_config.json`:
     }
   }
   ```
+
+The choice of languages and the specific features that can be configured are heavily dependent on the capabilities of the underlying language model that the application uses. The language model's ability to accurately generate content in different languages and handle linguistic nuances like stress, gender, and tense is a key factor in determining how well the application can support each language.
+
+## Future Plans
+
+As the Flashcard Generator application continues to evolve, several exciting enhancements and new features are planned to improve its functionality and expand its capabilities. These future plans aim to make the application more versatile, user-friendly, and effective for a wider range of language learners.
+
+- GUI: The next iteration of the application will include a GUI to further improve the user experience of the application.
 
 ## Contributing
 
