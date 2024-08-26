@@ -53,6 +53,9 @@ public class CommandLineInterface {
 
             inputService.getInput(flashcardType, chosenLanguage, selectedOptions);
 
+            // Get output mode
+            OutputM
+
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
         }
