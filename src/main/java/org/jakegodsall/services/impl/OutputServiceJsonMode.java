@@ -6,7 +6,7 @@ import org.jakegodsall.services.OutputService;
 import java.io.IOException;
 import java.util.List;
 
-public class OutputServiceJSONImpl implements OutputService {
+public class OutputServiceJsonMode implements OutputService {
     @Override
     public String generateOutput(List<Flashcard> flashcards) {
         return "";

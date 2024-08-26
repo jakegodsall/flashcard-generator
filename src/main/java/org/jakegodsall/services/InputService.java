@@ -1,6 +1,11 @@
 package org.jakegodsall.services;
 
+import org.jakegodsall.models.Language;
+import org.jakegodsall.models.Options;
+import org.jakegodsall.models.enums.FlashcardType;
 import org.jakegodsall.models.flashcards.Flashcard;
+
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,5 +26,5 @@ public interface InputService {
      * @return a {@code List} of {@link Flashcard} objects representing the
      *         input data.
      */
-    List<Flashcard> getInput();
+    List<Flashcard> getInput(FlashcardType flashcardType, Language chosenLanguage, Options selectedOptions) throws IOException;
 }

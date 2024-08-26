@@ -40,18 +40,7 @@ public class CommandLineInterface {
             // Get input mode
             InputMode inputMode = getInputMode(bufferedReader);
 
-//            if (inputMode == InputMode.FILE) {
-//                String word;
-//                while (!(word = getWordFromUser(bufferedReader)).equals("-1")) {
-//                    if (flashcardType == FlashcardType.SENTENCE) {
-//                        SentenceFlashcard sentenceFlashcard = flashcardService.getSentenceFlashcard(word, chosenLanguage, selectedOptions);
-//                        System.out.println(sentenceFlashcard);
-//                    } else if (flashcardType == FlashcardType.WORD) {
-//                        WordFlashcard wordFlashcard = flashcardService.getWordFlashcard(word, chosenLanguage, selectedOptions);
-//                        System.out.println(wordFlashcard);
-//                    }
-//                }
-//            }
+
 
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
