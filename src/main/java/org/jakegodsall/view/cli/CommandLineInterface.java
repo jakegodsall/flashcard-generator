@@ -7,7 +7,11 @@ import org.jakegodsall.models.Options;
 import org.jakegodsall.models.enums.FlashcardType;
 import org.jakegodsall.models.enums.InputMode;
 import org.jakegodsall.services.FlashcardService;
+import org.jakegodsall.services.InputService;
 import org.jakegodsall.services.impl.FlashcardServiceGPTImpl;
+import org.jakegodsall.services.impl.InputServiceCommaSeparatedStringMode;
+import org.jakegodsall.services.impl.InputServiceInteractiveMode;
+import org.jakegodsall.services.impl.InputServicePlainTextFileMode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,6 +25,7 @@ public class CommandLineInterface {
     Map<String, String> languages = LanguageConfig.getAllLanguageNames();
 
     private final ApiKeyHandler apiKeyHandler;
+    private InputService inputService;
 
     public void main() {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
@@ -40,7 +45,13 @@ public class CommandLineInterface {
             // Get input mode
             InputMode inputMode = getInputMode(bufferedReader);
 
+            switch (inputMode) {
+                case InputMode.INTERACTIVE -> inputService = new InputServiceInteractiveMode(bufferedReader, flashcardService);
+                case InputMode.COMMA_SEPARATED_STRING -> inputService = new InputServiceCommaSeparatedStringMode(bufferedReader, flashcardService);
+                case InputMode.PLAIN_TEXT_FILE -> inputService = new InputServicePlainTextFileMode(bufferedReader, flashcardService);
+            }
 
+            inputService.getInput(flashcardType, chosenLanguage, selectedOptions);
 
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
