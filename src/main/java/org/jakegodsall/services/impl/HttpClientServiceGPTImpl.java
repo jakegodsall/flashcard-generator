@@ -5,7 +5,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.jakegodsall.config.ApiKeyConfig;
 import org.jakegodsall.config.impl.ApiKeyConfigImpl;
 import org.jakegodsall.services.HttpClientService;
@@ -20,7 +19,7 @@ public class HttpClientServiceGPTImpl implements HttpClientService {
     private final CloseableHttpClient httpClient;
     private String BEARER_TOKEN;
 
-    HttpClientServiceGPTImpl() {
+    public HttpClientServiceGPTImpl(CloseableHttpClient httpClient) {
         ApiKeyConfig apiKeyConfig = new ApiKeyConfigImpl();
         try {
             BEARER_TOKEN = apiKeyConfig.getApiKeyFromFile(ApiKeyConfigImpl.CONFIG_DIR);
@@ -28,7 +27,7 @@ public class HttpClientServiceGPTImpl implements HttpClientService {
         } catch (Exception exception) {
             System.err.println(exception.getMessage());
         }
-        this.httpClient = HttpClients.createDefault();
+        this.httpClient = httpClient;
     }
 
     @Override
