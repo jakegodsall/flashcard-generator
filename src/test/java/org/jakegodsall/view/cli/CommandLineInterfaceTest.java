@@ -1,15 +1,8 @@
 package org.jakegodsall.view.cli;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.impl.client.HttpClients;
-import org.jakegodsall.config.impl.ApiKeyConfigImpl;
 import org.jakegodsall.models.enums.FlashcardType;
 import org.jakegodsall.models.enums.InputMode;
 import org.jakegodsall.models.enums.OutputMode;
-import org.jakegodsall.services.impl.FlashcardServiceGPTImpl;
-import org.jakegodsall.services.impl.HttpClientServiceGPTImpl;
-import org.jakegodsall.services.impl.JsonParseServiceGPTImpl;
-import org.jakegodsall.services.impl.PromptServiceGPTImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -29,13 +22,7 @@ class CommandLineInterfaceTest {
     @BeforeEach
     void setUp() {
         bufferedReader = Mockito.mock(BufferedReader.class);
-        commandLineInterface = new CommandLineInterface(
-                new FlashcardServiceGPTImpl(
-                        new HttpClientServiceGPTImpl(HttpClients.createDefault()),
-                        new JsonParseServiceGPTImpl(new ObjectMapper()), new PromptServiceGPTImpl()
-                ),
-                new ApiKeyHandler(new ApiKeyConfigImpl())
-        );
+        commandLineInterface = CommandLineInterfaceFactory.createGPTCommandLineInterface();
     }
 
     // GET INPUT MODE
