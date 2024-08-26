@@ -19,28 +19,51 @@ This project is a flashcard generator application that uses the GPT API to creat
 
 ## Setup
 
-1. **Clone the repository**
+1. Clone the repository
 
    ```bash
    git clone https://github.com/yourusername/flashcard-generator.git
    cd flashcard-generator
    ```
 
-2. Add your OpenAI API key
-   
-      Replace `your_open_api_key` in `GPTService.java` with your actual OpenAI API key.
-
 4. Build the project
 
     ```bash
-    mvn clean install
+    mvn clean package
     ```
 
-5. Run the application
+5. Navigate to the `target/` directory and run the application.
 
     ```bash
-    mvn exec:java -Dexec.mainClass="org.jakegodsall.MainCLI"
+    cd target/
+   java -jar flashcard-generator-1.0-with-dependencies.jar
     ```
+   
+## API Key Management
+
+When you first run the Flashcard Generator application, you will be prompted to enter your API key.
+
+The Flashcard Generator application requires an OpenAI API key to access the language processing services that power the flashcard generation functionality.
+
+### Storage
+
+On the first run, the application will prompt you to enter your API key.
+
+This key will then be stored in the `api_config.json` file within the `.flashcard-generator` directory located in your home directory.
+
+For subsequent uses, the application will automatically read the API key from this file. You won’t need to enter the API key again unless you choose to modify it.
+
+### Modifying the API Key
+
+If you need to change or update your API key, you can do so by either modifying directly in the file, or deleting the file.
+
+Once you delete this file and run the application again, you will again be prompted to add the API key.
+
+### Important Note
+
+It is important to keep your OpenAI API key secure and not share it with others. 
+
+The API key allows access to your OpenAI account, and usage charges may apply depending on the OpenAI services you use through the application.
 
 ## Usage
 
