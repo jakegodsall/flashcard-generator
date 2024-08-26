@@ -81,7 +81,7 @@ This flexibility allows you to choose the mode that best fits your workflow and 
 1. **CSV Mode:** Each flashcard is a separate line in a CSV file where fields are separated by commas.
 2. **JSON Mode:** Flashcards are exported as a JSON file.
 
-## Languages Configuration
+## Language Configuration
 
 The Flashcard Generator application allows you to tailor the flashcard generation process to the nuances of different languages.
 
