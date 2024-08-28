@@ -30,33 +30,34 @@ public class CommandLineInterface {
     private OutputService outputService;
 
     public void main() {
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
+        try (
+                BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in))) {
 
             // API Key Handling
-            apiKeyHandler.handle(bufferedReader);
+            apiKeyHandler.handle(consoleReader);
 
             // Options handling
-            Language chosenLanguage = getLanguageFromUser(bufferedReader);
+            Language chosenLanguage = getLanguageFromUser(consoleReader);
             // LanguageOptionsHandler loh = new LanguageOptionsHandler(chosenLanguage, bufferedReader);
             // Options selectedOptions = loh.getOptions();
             Options selectedOptions = Options.builder().build();
 
             // Get flashcard type
-            FlashcardType flashcardType = getFlashcardType(bufferedReader);
+            FlashcardType flashcardType = getFlashcardType(consoleReader);
 
             // Get input mode
-            InputMode inputMode = getInputMode(bufferedReader);
+            InputMode inputMode = getInputMode(consoleReader);
 
             switch (inputMode) {
-                case InputMode.INTERACTIVE -> inputService = new InputServiceInteractiveMode(bufferedReader, flashcardService);
-                case InputMode.COMMA_SEPARATED_STRING -> inputService = new InputServiceCommaSeparatedStringMode(bufferedReader, flashcardService);
-                case InputMode.PLAIN_TEXT_FILE -> inputService = new InputServicePlainTextFileMode(bufferedReader, flashcardService);
+                case InputMode.INTERACTIVE -> inputService = new InputServiceInteractiveMode(consoleReader, flashcardService);
+                case InputMode.COMMA_SEPARATED_STRING -> inputService = new InputServiceCommaSeparatedStringMode(consoleReader, flashcardService);
+                case InputMode.PLAIN_TEXT_FILE -> inputService = new InputServicePlainTextFileMode(consoleReader, flashcardService);
             }
 
             List<Flashcard> flashcards = inputService.getInput(flashcardType, chosenLanguage, selectedOptions);
 
             // Get output mode
-            OutputMode outputMode = getOutputMode(bufferedReader);
+            OutputMode outputMode = getOutputMode(consoleReader);
 
             switch (outputMode) {
                 case OutputMode.CSV -> outputService = new OutputServiceCsvMode();
