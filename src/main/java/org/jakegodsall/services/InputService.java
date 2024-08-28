@@ -19,12 +19,22 @@ import java.util.List;
  */
 public interface InputService {
     /**
-     * Retrieves a List of {@link Flashcard} objects from the input source.
+     * Retrieves a list of {@link Flashcard} objects from the input source.
      * The method of input retrieval (e.g., user input, file reading) is
      * determined by the specific implementation of this interface.
      *
+     * @param flashcardType    the type of flashcards to retrieve, which could be
+     *                         based on words, sentences, or other types as defined by
+     *                         the {@link FlashcardType} enumeration.
+     * @param chosenLanguage   the language in which the flashcards should be retrieved,
+     *                         specified by the {@link Language} enumeration.
+     * @param selectedOptions  additional options that might influence how the
+     *                         flashcards are retrieved or processed, encapsulated in the
+     *                         {@link Options} object.
      * @return a {@code List} of {@link Flashcard} objects representing the
      *         input data.
+     * @throws IOException if an I/O error occurs during input retrieval, such as
+     *                     when reading from a file or interacting with user input.
      */
     List<Flashcard> getInput(FlashcardType flashcardType, Language chosenLanguage, Options selectedOptions) throws IOException;
 }
