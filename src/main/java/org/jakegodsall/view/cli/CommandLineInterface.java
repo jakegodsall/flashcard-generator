@@ -12,6 +12,7 @@ import org.jakegodsall.services.FlashcardService;
 import org.jakegodsall.services.InputService;
 import org.jakegodsall.services.OutputService;
 import org.jakegodsall.services.impl.*;
+import org.jakegodsall.utils.FilenameUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,16 +55,26 @@ public class CommandLineInterface {
                 case InputMode.PLAIN_TEXT_FILE -> inputService = new InputServicePlainTextFileMode(consoleReader, flashcardService);
             }
 
+            // Process the input and create flashcards
             List<Flashcard> flashcards = inputService.getInput(flashcardType, chosenLanguage, selectedOptions);
 
             // Get output mode
             OutputMode outputMode = getOutputMode(consoleReader);
+            String fileExtension = "";
 
             switch (outputMode) {
-                case OutputMode.CSV -> outputService = new OutputServiceCsvMode();
-                case OutputMode.JSON -> outputService = new OutputServiceJsonMode();
+                case OutputMode.CSV:
+                    outputService = new OutputServiceCsvMode();
+                    fileExtension = ".csv";
+                    break;
+                case OutputMode.JSON:
+                    outputService = new OutputServiceJsonMode();
+                    fileExtension = ".json";
+                    break;
             }
 
+
+            String fileName = FilenameUtils.generateFilename(chosenLanguage, fileExtension);
             outputService.writeToFile(flashcards, "test.csv");
 
         } catch (IOException ioException) {
