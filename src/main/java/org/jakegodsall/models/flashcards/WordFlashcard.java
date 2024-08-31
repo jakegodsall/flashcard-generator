@@ -1,5 +1,6 @@
 package org.jakegodsall.models.flashcards;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvBindByPosition;
 import lombok.*;
@@ -10,6 +11,7 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 @Builder
+@JsonPropertyOrder({ "nativeWord", "targetWord", "exampleTargetSentence" })
 public class WordFlashcard extends Flashcard {
 
     @CsvBindByName(column = "nativeWord")
