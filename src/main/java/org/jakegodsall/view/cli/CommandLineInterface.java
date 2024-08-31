@@ -75,7 +75,7 @@ public class CommandLineInterface {
 
 
             String fileName = FilenameUtils.generateFilename(chosenLanguage, fileExtension);
-            outputService.writeToFile(flashcards, "test.csv");
+            outputService.writeToFile(flashcards, fileName);
 
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
