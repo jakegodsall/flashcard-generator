@@ -22,8 +22,8 @@ The library supports various languages and can export the generated sentences to
 1. Clone the repository:
 
    ```shell
-      git clone https://github.com/yourusername/flashcard-generator-core.git
-      cd flashcard-generator-core
+   git clone https://github.com/yourusername/flashcard-generator-core.git
+   cd flashcard-generator-core
    ```
    
 2. Build the project:
