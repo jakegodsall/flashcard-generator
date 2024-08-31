@@ -1,4 +1,4 @@
-package org.jakegodsall.services;
+package org.jakegodsall.services.json;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;

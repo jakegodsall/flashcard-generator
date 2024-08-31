@@ -1,4 +1,4 @@
-package org.jakegodsall.services;
+package org.jakegodsall.services.prompt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.jakegodsall.models.Language;

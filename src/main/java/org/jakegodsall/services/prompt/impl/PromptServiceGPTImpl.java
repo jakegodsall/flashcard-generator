@@ -1,4 +1,4 @@
-package org.jakegodsall.services.impl;
+package org.jakegodsall.services.prompt.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
-import org.jakegodsall.services.PromptService;
+import org.jakegodsall.services.prompt.PromptService;
 import org.jakegodsall.utils.StringUtils;
 
 

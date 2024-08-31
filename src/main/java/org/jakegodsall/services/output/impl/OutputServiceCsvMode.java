@@ -1,4 +1,4 @@
-package org.jakegodsall.services.impl;
+package org.jakegodsall.services.output.impl;
 
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
@@ -6,7 +6,7 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import lombok.RequiredArgsConstructor;
 import org.jakegodsall.models.flashcards.Flashcard;
-import org.jakegodsall.services.OutputService;
+import org.jakegodsall.services.output.OutputService;
 
 import java.io.FileWriter;
 import java.io.IOException;

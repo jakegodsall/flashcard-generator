@@ -1,4 +1,4 @@
-package org.jakegodsall.services;
+package org.jakegodsall.services.output;
 
 import org.jakegodsall.models.flashcards.Flashcard;
 

@@ -5,7 +5,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.jakegodsall.services.HttpClientService;
+import org.jakegodsall.services.http.HttpClientService;
+import org.jakegodsall.services.http.impl.HttpClientServiceGPTImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

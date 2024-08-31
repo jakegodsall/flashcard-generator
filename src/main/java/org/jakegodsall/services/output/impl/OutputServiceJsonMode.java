@@ -1,7 +1,7 @@
-package org.jakegodsall.services.impl;
+package org.jakegodsall.services.output.impl;
 
 import org.jakegodsall.models.flashcards.Flashcard;
-import org.jakegodsall.services.OutputService;
+import org.jakegodsall.services.output.OutputService;
 
 import java.io.IOException;
 import java.util.List;

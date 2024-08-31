@@ -1,4 +1,4 @@
-package org.jakegodsall.services.impl;
+package org.jakegodsall.services.http.impl;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -7,7 +7,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.jakegodsall.config.ApiKeyConfig;
 import org.jakegodsall.config.impl.ApiKeyConfigImpl;
-import org.jakegodsall.services.HttpClientService;
+import org.jakegodsall.services.http.HttpClientService;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

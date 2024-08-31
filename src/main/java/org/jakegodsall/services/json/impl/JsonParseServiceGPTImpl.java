@@ -1,4 +1,4 @@
-package org.jakegodsall.services.impl;
+package org.jakegodsall.services.json.impl;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.RequiredArgsConstructor;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.models.flashcards.WordFlashcard;
-import org.jakegodsall.services.JsonParseService;
+import org.jakegodsall.services.json.JsonParseService;
 
 import java.io.IOException;
 import java.util.ArrayList;

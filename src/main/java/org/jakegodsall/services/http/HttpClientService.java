@@ -1,4 +1,4 @@
-package org.jakegodsall.services;
+package org.jakegodsall.services.http;
 
 import org.apache.http.HttpResponse;
 

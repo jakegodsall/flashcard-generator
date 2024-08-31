@@ -1,4 +1,4 @@
-package org.jakegodsall.services.impl;
+package org.jakegodsall.services.flashcard.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpEntity;
@@ -8,10 +8,10 @@ import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.models.flashcards.WordFlashcard;
-import org.jakegodsall.services.FlashcardService;
-import org.jakegodsall.services.HttpClientService;
-import org.jakegodsall.services.JsonParseService;
-import org.jakegodsall.services.PromptService;
+import org.jakegodsall.services.flashcard.FlashcardService;
+import org.jakegodsall.services.http.HttpClientService;
+import org.jakegodsall.services.json.JsonParseService;
+import org.jakegodsall.services.prompt.PromptService;
 
 import java.io.IOException;
 import java.util.List;
