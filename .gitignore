@@ -1,5 +1,6 @@
 # Maven
 release.properties
+pom.xml.releaseBackup
 
 ### IntelliJ IDEA ###
 .idea
