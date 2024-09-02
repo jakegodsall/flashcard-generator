@@ -4,14 +4,14 @@
 
     <groupId>org.jakegodsall</groupId>
     <artifactId>flashcard-generator-core</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <scm>
         <connection>scm:git:https://github.com/jakegodsall/flashcard-generator-core.git</connection>
         <developerConnection>scm:git:git@github.com:jakegodsall/flashcard-generator-core.git</developerConnection>
         <url>https://github.com/jakegodsall/flashcard-generator-core</url>
-        <tag>1.0.0</tag>
+        <tag>1.0</tag>
     </scm>
 
     <properties>
