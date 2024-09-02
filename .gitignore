@@ -1,7 +1,5 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Maven
+release.properties
 
 ### IntelliJ IDEA ###
 .idea
@@ -41,3 +39,7 @@ build/
 # Project
 api_config.json
 test.csv
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
