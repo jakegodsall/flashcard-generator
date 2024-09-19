@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.RequiredArgsConstructor;
+import org.jakegodsall.models.flashcards.Flashcard;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.models.flashcards.WordFlashcard;
 import org.jakegodsall.services.json.JsonParseService;
@@ -80,6 +81,46 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
     }
 
     @Override
+    public List<Flashcard> parseWordFlashcardBatch(String responseBody) throws JsonParseException {
+        List<Flashcard> flashcards = new ArrayList<>();
+        try {
+            // Get the required JSON String
+            String jsonArray = parseContentFromResponse(responseBody);
+            // Parse the JSON into a JsonNode tree
+            JsonNode rootNode = objectMapper.readTree(jsonArray);
+            System.out.println("rootNode from readTree: " + rootNode);
+            // Check if the root node is an array
+            if (rootNode.isArray()) {
+                for (JsonNode node : rootNode) {
+                    JsonNode nativeWordNode = node.path("nativeWord");
+                    if (nativeWordNode.isMissingNode()) {
+                        throw new NoSuchElementException("Missing 'nativeWord' field in the JSON response");
+                    }
+                    JsonNode targetWordNode = node.path("targetWord");
+                    if (targetWordNode.isMissingNode()) {
+                        throw new NoSuchElementException("Missing 'targetWord' field in the JSON response");
+                    }
+                    JsonNode targetSentenceNode = node.path("targetSentence");
+                    if (targetSentenceNode.isMissingNode()) {
+                        throw new NoSuchElementException("Missing 'targetSentence' field in the JSON response");
+                    }
+
+                    flashcards.add(new WordFlashcard(
+                            nativeWordNode.asText(),
+                            targetWordNode.asText(),
+                            targetSentenceNode.asText()
+                    ));
+                }
+            }
+            return flashcards;
+        } catch (NoSuchElementException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new JsonParseException("Failed to parse batch of WordFlashcard JSON");
+        }
+    }
+
+    @Override
     public SentenceFlashcard parseSentenceFlashcard(String responseBody) throws JsonParseException {
         try {
             // Get the required JSON String
@@ -102,10 +143,15 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
                     targetSentenceNode.asText()
             );
         } catch (NoSuchElementException ex) {
-        throw ex;
+            throw ex;
         } catch (Exception ex) {
             throw new JsonParseException("Failed to parse SentenceFlashcard JSON");
         }
+    }
+
+    @Override
+    public List<Flashcard> parseSentenceFlashcardBatch(String responseBody) {
+        return List.of();
     }
 
     public String parseContentFromResponse(String responseBody) throws JsonProcessingException {
@@ -127,6 +173,11 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
             throw new NoSuchElementException("Missing 'content' field in the JSON response");
 
         // Return the response
-        return contentNode.asText();
+        String content = "";
+        if (contentNode.isObject() || contentNode.isArray())
+            content = contentNode.toString();
+        if (contentNode.isValueNode())
+            content = contentNode.asText();
+        return content;
     }
 }

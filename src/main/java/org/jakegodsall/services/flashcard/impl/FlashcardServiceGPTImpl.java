@@ -6,6 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
+import org.jakegodsall.models.flashcards.Flashcard;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.models.flashcards.WordFlashcard;
 import org.jakegodsall.services.flashcard.FlashcardService;
@@ -14,7 +15,12 @@ import org.jakegodsall.services.json.JsonParseService;
 import org.jakegodsall.services.prompt.PromptService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +36,7 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     private final HttpClientService httpClientService;
     private final JsonParseService jsonParseService;
     private final PromptService promptGenerator;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     @Override
     public List<String> getAvailableModels() {
@@ -84,5 +91,27 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             System.err.println(ex.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public List<Flashcard> generateFlashcardsConcurrently(List<String> words, Language language, Options options) throws InterruptedException, ExecutionException {
+        List<Future<Flashcard>> futures = new ArrayList<>();
+
+        // Submit a task for each word
+        for (String word : words) {
+            futures.add(executorService.submit(() -> getWordFlashcard(word, language, options)));
+        }
+
+        // Collect the results
+        List<Flashcard> flashcards = new ArrayList<>();
+        for (Future<Flashcard> future : futures) {
+            flashcards.add(future.get());
+        }
+
+        return flashcards;
+    }
+
+    public void shutdownService() {
+        executorService.shutdown();
     }
 }

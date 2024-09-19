@@ -1,4 +1,4 @@
-package org.jakegodsall.services.input.impl;
+package org.jakegodsall.services.input.impl.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.jakegodsall.models.Language;
@@ -6,7 +6,7 @@ import org.jakegodsall.models.Options;
 import org.jakegodsall.models.enums.FlashcardType;
 import org.jakegodsall.models.flashcards.Flashcard;
 import org.jakegodsall.services.flashcard.FlashcardService;
-import org.jakegodsall.services.input.InputService;
+import org.jakegodsall.services.input.impl.InputService;
 
 import java.io.BufferedReader;
 import java.io.IOException;

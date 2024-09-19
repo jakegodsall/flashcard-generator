@@ -1,4 +1,4 @@
-package org.jakegodsall.services.input;
+package org.jakegodsall.services.input.impl;
 
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;

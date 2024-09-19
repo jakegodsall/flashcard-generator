@@ -1,17 +1,19 @@
-package org.jakegodsall.services.impl;
+package org.jakegodsall.services.json.impl;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jakegodsall.services.json.impl.JsonParseServiceGPTImpl;
+import org.jakegodsall.models.flashcards.Flashcard;
+import org.jakegodsall.models.flashcards.WordFlashcard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -60,6 +62,47 @@ class JsonParseServiceGPTImplTest {
             jsonParseService.parseWordFlashcard(responseBody);
         });
         assertEquals("Missing 'content' field in the JSON response", exception.getMessage());
+    }
+
+    @Test
+    void testMalformedJson() throws Exception {
+        // Malformed JSON input
+        String malformedJson = "[{\"nativeWord\": \"dog\", \"targetWord\": \"pies\", \"targetSentence\": \"I have a dog.\"";
+
+        // Mock ObjectMapper to throw a JsonProcessingException when parsing
+        when(objectMapper.readTree(Mockito.anyString())).thenThrow(new RuntimeException("Invalid JSON"));
+
+        // Call the method and expect a JsonParseException
+        Exception exception = assertThrows(JsonParseException.class, () ->
+                jsonParseService.parseWordFlashcardBatch(malformedJson));
+
+        assertTrue(exception.getMessage().contains("Failed to parse batch of WordFlashcard JSON"));
+    }
+
+    // PARSE WORD BATCH FLASHCARDS
+
+    @Test
+    void parseBatchWordFlashcards_success() throws JsonProcessingException {
+        String responseBody = "{ \"choices\": [{ \"message\": { \"content\":" +
+                "[{\"nativeWord\": \"dog\", \"targetWord\": \"pies\", \"targetSentence\": \"I have a dog.\"}," +
+                "{\"nativeWord\": \"cat\", \"targetWord\": \"kot\", \"targetSentence\": \"I have a cat.\"}]"
+                + "} }] }";
+
+        // Mock the JSON tree
+        JsonNode rootNode = new ObjectMapper().readTree(responseBody); // use actual ObjectMapper for real parsing
+
+        // Call the method
+        List<Flashcard> result = jsonParseService.parseWordFlashcardBatch(responseBody);
+
+        JsonNode rootNodeForResponseBody = new ObjectMapper().readTree(responseBody);
+        when(objectMapper.readTree(Mockito.eq(responseBody))).thenReturn(rootNodeForResponseBody);
+
+        System.out.println(result);
+
+        // Assertions
+        assertEquals(2, result.size());
+        assertEquals("dog", ((WordFlashcard)result.get(0)).getNativeWord());
+        assertEquals("kot", ((WordFlashcard)result.get(1)).getTargetWord());
     }
 
     // PARSE CONTENT FROM RESPONSE

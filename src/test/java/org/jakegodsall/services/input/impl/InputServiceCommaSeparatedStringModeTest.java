@@ -1,4 +1,4 @@
-package org.jakegodsall.services.impl;
+package org.jakegodsall.services.input.impl;
 
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
@@ -7,7 +7,7 @@ import org.jakegodsall.models.flashcards.Flashcard;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.models.flashcards.WordFlashcard;
 import org.jakegodsall.services.flashcard.FlashcardService;
-import org.jakegodsall.services.input.impl.InputServiceCommaSeparatedStringMode;
+import org.jakegodsall.services.input.impl.impl.InputServiceCommaSeparatedStringMode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

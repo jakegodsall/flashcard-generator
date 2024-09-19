@@ -1,6 +1,7 @@
 package org.jakegodsall.services.json;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import org.jakegodsall.models.flashcards.Flashcard;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.models.flashcards.WordFlashcard;
 
@@ -29,6 +30,8 @@ public interface JsonParseService {
      */
     WordFlashcard parseWordFlashcard(String responseBody) throws JsonParseException;
 
+    List<Flashcard> parseWordFlashcardBatch(String responseBody) throws JsonParseException;
+
     /**
      * Parses the JSON response body into a {@link SentenceFlashcard} object.
      *
@@ -37,4 +40,6 @@ public interface JsonParseService {
      * @throws JsonParseException If the parsing fails due to invalid JSON or unexpected format.
      */
     SentenceFlashcard parseSentenceFlashcard(String responseBody) throws JsonParseException;
+
+    List<Flashcard> parseSentenceFlashcardBatch(String responseBody) throws JsonParseException;
 }

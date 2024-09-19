@@ -2,10 +2,12 @@ package org.jakegodsall.services.flashcard;
 
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
+import org.jakegodsall.models.flashcards.Flashcard;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.models.flashcards.WordFlashcard;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Interface for FlashcardService to define methods for interacting with language models.
@@ -37,4 +39,6 @@ public interface FlashcardService {
      * @return A {@link SentenceFlashcard} object containing a native sentence and the corresponding sentence in the target language using the target word.
      */
     SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options);
+
+    List<Flashcard> generateFlashcardsConcurrently(List<String> words, Language language, Options options) throws InterruptedException, ExecutionException;
 }
