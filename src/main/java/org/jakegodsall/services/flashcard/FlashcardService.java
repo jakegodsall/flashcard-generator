@@ -29,7 +29,7 @@ public interface FlashcardService {
      * @param options    Additional options for customizing the flashcard generation.
      * @return A {@link WordFlashcard} object containing the native word, the target word, and an example sentence using the target word.
      */
-    WordFlashcard getWordFlashcard(String targetWord, Language language, Options options);
+    Flashcard getWordFlashcard(String targetWord, Language language, Options options);
 
     /**
      * Generates a flashcard for a specific word in a target language, using full sentences.
@@ -39,7 +39,7 @@ public interface FlashcardService {
      * @param options    Additional options for customizing the flashcard generation.
      * @return A {@link SentenceFlashcard} object containing a native sentence and the corresponding sentence in the target language using the target word.
      */
-    SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options);
+    Flashcard getSentenceFlashcard(String targetWord, Language language, Options options);
 
     Flashcard generateFlashcard(String targetWord, FlashcardType flashcardType, Language language, Options options);
 

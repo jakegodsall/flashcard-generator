@@ -8,8 +8,6 @@ import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
 import org.jakegodsall.models.enums.FlashcardType;
 import org.jakegodsall.models.flashcards.Flashcard;
-import org.jakegodsall.models.flashcards.SentenceFlashcard;
-import org.jakegodsall.models.flashcards.WordFlashcard;
 import org.jakegodsall.services.flashcard.FlashcardService;
 import org.jakegodsall.services.http.HttpClientService;
 import org.jakegodsall.services.json.JsonParseService;
@@ -53,10 +51,10 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     }
 
     @Override
-    public WordFlashcard getWordFlashcard(String targetWord, Language language, Options options) {
+    public Flashcard getWordFlashcard(String targetWord, Language language, Options options) {
         try {
             // Generate the prompt to get JSON in the correct format for populating WordFlashcard bean
-            String prompt = promptGenerator.generatePromptForWordFlashcard(targetWord, language, options);
+            String prompt = promptGenerator.generatePrompt(targetWord, FlashcardType.WORD, language, options);
             // Generate HTTP POST request body
             String requestBody = promptGenerator.generateRequestBody(prompt);
             // Send the POST request to the GPT API
@@ -65,7 +63,7 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             HttpEntity responseEntity = response.getEntity();
             String result = EntityUtils.toString(responseEntity);
             // Parse the result to a WordFlashcard
-            return jsonParseService.parseWordFlashcard(result);
+            return jsonParseService.parseFlashcard(result, FlashcardType.WORD);
         } catch (IOException ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
             System.err.println(ex.getMessage());
@@ -74,10 +72,10 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     }
 
     @Override
-    public SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options) {
+    public Flashcard getSentenceFlashcard(String targetWord, Language language, Options options) {
         try {
             // Generate the prompt to get JSON in the correct format for populating WordFlashcard bean
-            String prompt = promptGenerator.generatePromptForSentenceFlashcard(targetWord, language, options);
+            String prompt = promptGenerator.generatePrompt(targetWord, FlashcardType.SENTENCE, language, options);
             // Generate HTTP POST request body
             String requestBody = promptGenerator.generateRequestBody(prompt);
             // Send the POST request to the GPT API
@@ -86,7 +84,7 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             HttpEntity responseEntity = response.getEntity();
             String result = EntityUtils.toString(responseEntity);
             // Parse the result to a WordFlashcard
-            return jsonParseService.parseSentenceFlashcard(result);
+            return jsonParseService.parseFlashcard(result, FlashcardType.SENTENCE);
         } catch (IOException ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
             System.err.println(ex.getMessage());

@@ -62,6 +62,7 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
             };
         } catch (JsonProcessingException ex) {
             System.err.println(ex.getMessage());
+            return null;
         }
     }
 
