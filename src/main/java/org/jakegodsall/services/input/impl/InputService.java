@@ -1,40 +1,28 @@
 package org.jakegodsall.services.input.impl;
 
-import org.jakegodsall.models.Language;
-import org.jakegodsall.models.Options;
-import org.jakegodsall.models.enums.FlashcardType;
-import org.jakegodsall.models.flashcards.Flashcard;
-
 import java.io.IOException;
 import java.util.List;
 
 /**
- * The {@code InputService} interface defines the contract for services that
- * handle the input of flashcards. Implementations of this interface should
- * provide a method to retrieve a list of {@link Flashcard} objects from a
- * specified input source.
+ * The {@code InputService} interface defines the contract for services that handle
+ * input retrieval from the user. Implementations of this interface should provide
+ * a method to capture input from the user and return it as a list of words.
  *
- * <p>This interface is designed to be flexible, allowing for various input
- * sources such as interactive user input, file-based input, or string-based input.</p>
+ * <p>This interface is designed to focus on the basic functionality of retrieving
+ * input as words from a user, which can then be passed into further processing
+ * pipelines. It does not concern itself with flashcards or complex data structures
+ * beyond capturing user-provided words.</p>
  */
 public interface InputService {
     /**
-     * Retrieves a list of {@link Flashcard} objects from the input source.
-     * The method of input retrieval (e.g., user input, file reading) is
-     * determined by the specific implementation of this interface.
+     * Retrieves a list of words entered by the user. The implementation of this method
+     * should handle capturing the user's input and converting it into a {@code List<String>}.
      *
-     * @param flashcardType    the type of flashcards to retrieve, which could be
-     *                         based on words, sentences, or other types as defined by
-     *                         the {@link FlashcardType} enumeration.
-     * @param chosenLanguage   the language in which the flashcards should be retrieved,
-     *                         specified by the {@link Language} enumeration.
-     * @param selectedOptions  additional options that might influence how the
-     *                         flashcards are retrieved or processed, encapsulated in the
-     *                         {@link Options} object.
-     * @return a {@code List} of {@link Flashcard} objects representing the
-     *         input data.
-     * @throws IOException if an I/O error occurs during input retrieval, such as
-     *                     when reading from a file or interacting with user input.
+     * <p>This method is expected to only handle the retrieval of words, leaving any further
+     * processing or conversion to other components in the pipeline.</p>
+     *
+     * @return a {@code List<String>} representing the words input by the user.
+     * @throws IOException if an I/O error occurs during input retrieval.
      */
     List<String> getInput() throws IOException;
 }
