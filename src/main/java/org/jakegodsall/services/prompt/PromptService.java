@@ -3,6 +3,7 @@ package org.jakegodsall.services.prompt;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
+import org.jakegodsall.models.enums.FlashcardType;
 
 /**
  * Interface for prompt generator to create prompts for the OpenAI API.
@@ -18,24 +19,30 @@ public interface PromptService {
     String generateRequestBody(String prompt) throws JsonProcessingException;
 
     /**
-     * Generates the prompt for the API to return the desired format for a {@link org.jakegodsall.models.flashcards.WordFlashcard}.
+     * Generates a prompt for the API based on the provided target word, flashcard type, language, and additional options.
+     * This prompt is used to structure the request sent to the API, determining the format of the returned data (e.g.,
+     * word-based or sentence-based flashcards).
      *
-     * @param targetWord     the word in the target language to include in the sentence.
-     * @param language the language to use.
-     * @param options  additional options for sentence generation.
-     * @return the generated prompt.
+     * <p>The generated prompt will be customized depending on the {@link org.jakegodsall.models.enums.FlashcardType},
+     * allowing flexibility to support various types of flashcards, such as word flashcards or sentence flashcards.
+     * The structure of the prompt ensures that the returned data follows the correct format expected for that specific flashcard type.</p>
+     *
+     * @param targetWord the word in the target language that will be used to generate the flashcard.
+     * @param flashcardType the type of flashcard to generate, as defined by the {@link FlashcardType} enumeration (e.g., WORD, SENTENCE).
+     * @param language the language in which the flashcard content will be generated.
+     * @param options additional options that influence the generation of the prompt, such as difficulty level or specific grammatical features.
+     * @return the generated prompt as a {@code String}, which will be sent to the API.
      */
-    String generatePromptForWordFlashcard(String targetWord, Language language, Options options);
+    String generatePrompt(String targetWord, FlashcardType flashcardType, Language language, Options options);
 
     /**
-     * Generates the prompt for the API to return the desired format for a {@link org.jakegodsall.models.flashcards.SentenceFlashcard}.
+     * Creates a simple prompt for the next word in a sequence.
      *
-     * @param targetWord     the word in the target language to include in the sentences.
-     * @param language the language to use.
-     * @param options  additional options for sentence generation.
-     * @return the generated prompt. Format: {"nativeSentence": <sentence in native language>, "targetSentence": <sentence in target language>}
+     * <p>This method generates a basic prompt that includes the given word, typically used for
+     * processing or highlighting the next word in a sequence.</p>
+     *
+     * @param targetWord the word to be included in the prompt.
+     * @return a string containing the prompt for the next word.
      */
-    String generatePromptForSentenceFlashcard(String targetWord, Language language, Options options);
-
-    String generatePromptForSubsequentWord(String targetWord);
+    public String generatePromptForSubsequentWord(String targetWord);
 }

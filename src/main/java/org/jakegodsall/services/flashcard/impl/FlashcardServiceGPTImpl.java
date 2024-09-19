@@ -98,7 +98,7 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     public Flashcard generateFlashcard(String targetWord, FlashcardType flashcardType, Language language, Options options) {
         try {
             // Generate the prompt based on the flashcard type
-            String prompt = generatePrompt(targetWord, flashcardType, language, options);
+            String prompt = promptGenerator.generatePrompt(targetWord, flashcardType, language, options);
             // Generate HTTP POST request body
             String requestBody = promptGenerator.generateRequestBody(prompt);
             // Send the POST request to the GPT API

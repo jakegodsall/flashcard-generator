@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvBindByPosition;
 import lombok.*;
+import org.jakegodsall.utils.StringUtils;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,6 +14,11 @@ import lombok.*;
 @Builder
 @JsonPropertyOrder({ "nativeWord", "targetWord", "exampleTargetSentence" })
 public class WordFlashcard extends Flashcard {
+    public static final String JSON_STRUCTURE_FOR_PROMPT = "{\n" +
+        StringUtils.createJsonComponent("nativeWord", "<word in native language>") + ",\n" +
+        StringUtils.createJsonComponent("targetWord", "<word in target language>") + ",\n" +
+        StringUtils.createJsonComponent("targetSentence", "<sentence in target language>") + "\n" +
+        "}\n";
 
     @CsvBindByName(column = "nativeWord")
     @CsvBindByPosition(position = 0)
