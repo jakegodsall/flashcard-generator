@@ -107,7 +107,7 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             HttpEntity responseEntity = response.getEntity();
             String result = EntityUtils.toString(responseEntity);
             // Parse the result based on the flashcard type
-            return parseFlashcard(result, flashcardType);
+            return jsonParseService.parseFlashcard(result, flashcardType);
         } catch (IOException ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
             System.err.println(ex.getMessage());
