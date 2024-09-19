@@ -36,5 +36,5 @@ public interface InputService {
      * @throws IOException if an I/O error occurs during input retrieval, such as
      *                     when reading from a file or interacting with user input.
      */
-    List<Flashcard> getInput(FlashcardType flashcardType, Language chosenLanguage, Options selectedOptions) throws IOException;
+    List<String> getInput() throws IOException;
 }
