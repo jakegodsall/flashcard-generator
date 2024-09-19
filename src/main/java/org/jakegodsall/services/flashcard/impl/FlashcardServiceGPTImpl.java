@@ -6,6 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
+import org.jakegodsall.models.enums.FlashcardType;
 import org.jakegodsall.models.flashcards.Flashcard;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.models.flashcards.WordFlashcard;
@@ -86,6 +87,27 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             String result = EntityUtils.toString(responseEntity);
             // Parse the result to a WordFlashcard
             return jsonParseService.parseSentenceFlashcard(result);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            System.err.println(ex.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public Flashcard generateFlashcard(String targetWord, FlashcardType flashcardType, Language language, Options options) {
+        try {
+            // Generate the prompt based on the flashcard type
+            String prompt = generatePrompt(targetWord, flashcardType, language, options);
+            // Generate HTTP POST request body
+            String requestBody = promptGenerator.generateRequestBody(prompt);
+            // Send the POST request to the GPT API
+            HttpResponse response = httpClientService.sendPostRequest(API_CHAT_URL, requestBody);
+            // Get the result
+            HttpEntity responseEntity = response.getEntity();
+            String result = EntityUtils.toString(responseEntity);
+            // Parse the result based on the flashcard type
+            return parseFlashcard(result, flashcardType);
         } catch (IOException ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
             System.err.println(ex.getMessage());
