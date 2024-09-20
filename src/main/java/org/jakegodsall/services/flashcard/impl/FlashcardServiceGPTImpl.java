@@ -16,10 +16,7 @@ import org.jakegodsall.services.prompt.PromptService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -75,11 +72,20 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     public List<Flashcard> generateFlashcardsSequentially(List<String> targetWords, FlashcardType flashcardType, Language language, Options options) {
         List<Flashcard> flashcards = new ArrayList<>();
 
+        // Track the start time
+        long startTime = System.currentTimeMillis();
+
         // Iterate through words, generate flashcards and store them in the List<Flashcard>
         for (int i = 0; i < targetWords.size(); i++) {
             flashcards.add(generateFlashcard(targetWords.get(i), flashcardType, language, options));
-            System.out.println("Flashcard " + i + " of " + targetWords.size() + " processed.");
+            System.out.println("Flashcard " + (i + 1) + " of " + targetWords.size() + " generated.");
         }
+
+        // Track the end time
+        long endTime = System.currentTimeMillis();
+
+        // Calculate the total time and print it
+        System.out.println("All flashcards generated. Total time: " + (endTime - startTime) / 1000 + " seconds.");
 
         return flashcards;
     }
@@ -88,21 +94,37 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     public List<Flashcard> generateFlashcardsConcurrently(List<String> targetWords, FlashcardType flashcardType, Language language, Options options) throws InterruptedException, ExecutionException {
         List<Future<Flashcard>> futures = new ArrayList<>();
 
-        // Submit a task for each word
+        long startTime = System.currentTimeMillis();
+
+        // Submit a task for each word and inform the client
         for (String targetWord : targetWords) {
             futures.add(executorService.submit(() -> generateFlashcard(targetWord, flashcardType, language, options)));
         }
 
-        // Collect the results
+        System.out.println("All tasks submitted. Waiting for results...");
+
+        // Collect the results and report progress
         List<Flashcard> flashcards = new ArrayList<>();
-        for (Future<Flashcard> future : futures) {
+        for (int i = 0; i < futures.size(); i++) {
+            Future<Flashcard> future = futures.get(i);
             try {
                 flashcards.add(future.get());
+                System.out.println("Flashcard " + (i + 1) + " of " + targetWords.size() + " generated.");
             } catch (ExecutionException e) {
-                System.err.println("Error generating flashcard: " + e.getCause());
+                System.err.println("Error generating flashcard for task " + (i + 1) + ": " + e.getCause());
                 throw e;
             }
         }
+
+        long endTime = System.currentTimeMillis();
+        System.out.println("All flashcards generated. Total time: " + (endTime - startTime) / 1000 + " seconds.");
+
+        // Properly shut down the executor service
+        executorService.shutdown();
+        if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+            System.err.println("Executor did not terminate in the specified time.");
+        }
+
         return flashcards;
     }
 

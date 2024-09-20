@@ -54,7 +54,7 @@ public class PromptServiceGPTImpl implements PromptService {
             case WORD -> WordFlashcard.DESCRIPTION_OF_CONTENT;
             case SENTENCE -> SentenceFlashcard.DESCRIPTION_OF_CONTENT;
             default -> throw new IllegalArgumentException("Unsupported FlashcardType: " + flashcardType);
-        }
+        };
     }
 
     private String getFlashcardStructure(FlashcardType flashcardType) {
