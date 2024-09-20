@@ -37,7 +37,7 @@ public class PromptServiceGPTImpl implements PromptService {
 
     @Override
     public String generatePrompt(String targetWord, FlashcardType flashcardType, Language language, Options options) {
-        return generateBasePrompt() + getFlashcardStructure(flashcardType) + "The word is " + targetWord + " and the target language is " + language.getName() + ".\n";
+        return generateBasePrompt() + getDescriptionOfContent(flashcardType) + getFlashcardStructure(flashcardType) + "The word is " + targetWord + " and the target language is " + language.getName() + ".\n";
     }
 
     @Override
@@ -47,6 +47,14 @@ public class PromptServiceGPTImpl implements PromptService {
 
     private String generateBasePrompt() {
         return "Given a word in a target language generate the following JSON.\n\"The JSON should include:\n";
+    }
+
+    private String getDescriptionOfContent(FlashcardType flashcardType) {
+        return switch (flashcardType) {
+            case WORD -> WordFlashcard.DESCRIPTION_OF_CONTENT;
+            case SENTENCE -> SentenceFlashcard.DESCRIPTION_OF_CONTENT;
+            default -> throw new IllegalArgumentException("Unsupported FlashcardType: " + flashcardType);
+        }
     }
 
     private String getFlashcardStructure(FlashcardType flashcardType) {
