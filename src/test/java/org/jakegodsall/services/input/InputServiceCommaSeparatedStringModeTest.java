@@ -1,6 +1,6 @@
-package org.jakegodsall.services.input.impl;
+package org.jakegodsall.services.input;
 
-import org.jakegodsall.services.input.impl.impl.InputServiceCommaSeparatedStringMode;
+import org.jakegodsall.services.input.impl.InputServiceCommaSeparatedStringMode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

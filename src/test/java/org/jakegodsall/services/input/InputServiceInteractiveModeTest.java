@@ -1,9 +1,9 @@
-package org.jakegodsall.services.input.impl;
+package org.jakegodsall.services.input;
 
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
 import org.jakegodsall.services.flashcard.FlashcardService;
-import org.jakegodsall.services.input.impl.impl.InputServiceInteractiveMode;
+import org.jakegodsall.services.input.impl.InputServiceInteractiveMode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

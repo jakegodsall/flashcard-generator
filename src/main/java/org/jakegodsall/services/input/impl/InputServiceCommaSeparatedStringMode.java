@@ -1,7 +1,7 @@
-package org.jakegodsall.services.input.impl.impl;
+package org.jakegodsall.services.input.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.jakegodsall.services.input.impl.InputService;
+import org.jakegodsall.services.input.InputService;
 
 import java.io.BufferedReader;
 import java.io.IOException;

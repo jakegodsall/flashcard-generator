@@ -1,4 +1,4 @@
-package org.jakegodsall.services.input.impl;
+package org.jakegodsall.services.input;
 
 import java.io.IOException;
 import java.util.List;

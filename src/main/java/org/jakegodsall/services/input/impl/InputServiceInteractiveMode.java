@@ -1,12 +1,12 @@
-package org.jakegodsall.services.input.impl.impl;
+package org.jakegodsall.services.input.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.jakegodsall.services.flashcard.FlashcardService;
-import org.jakegodsall.services.input.impl.InputService;
+import org.jakegodsall.services.input.InputService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,7 +17,7 @@ public class InputServiceInteractiveMode implements InputService {
 
     @Override
     public List<String> getInput() throws IOException {
-       return new ArrayList<>();
+       return Collections.singletonList(getWordFromUser(bufferedReader));
     }
 
     public String getWordFromUser(BufferedReader bufferedReader) throws IOException {
