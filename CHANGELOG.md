@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 ### Fixed
+- Fixed the `FilenameUtils.generateFilename()` to test whether the user provided a file extension with preceeding `.`.
+
+## [1.1] - 2024-09-19
+### Added
+- Refactored services to use a single method for all `FlashcardType` rather than relying on separate implementations.
 
 ## [1.0] - 2024-09-02
 ### Added

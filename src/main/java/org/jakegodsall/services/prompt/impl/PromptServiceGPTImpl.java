@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
+import org.jakegodsall.models.enums.FlashcardType;
+import org.jakegodsall.models.flashcards.SentenceFlashcard;
+import org.jakegodsall.models.flashcards.WordFlashcard;
 import org.jakegodsall.services.prompt.PromptService;
-import org.jakegodsall.utils.StringUtils;
 
 
 /**
@@ -34,26 +36,8 @@ public class PromptServiceGPTImpl implements PromptService {
     }
 
     @Override
-    public String generatePromptForWordFlashcard(String targetWord, Language language, Options options) {
-        return generateOriginalPromptTemplate() +
-                "The word translated to the native language of English.\nThe target word itself.\nA very basic sentence in the target language.\nThe structure should be:\n" +
-                "{\n" +
-                StringUtils.createJsonComponent("nativeWord", "<word in native language>") + ",\n" +
-                StringUtils.createJsonComponent("targetWord", "<word in target language>") + ",\n" +
-                StringUtils.createJsonComponent("targetSentence", "<sentence in target language>") + "\n" +
-                "}\n" +
-                "\n\nThe word is " + targetWord + " and the target language is " + language.getName() + ".\n";
-    }
-
-    @Override
-    public String generatePromptForSentenceFlashcard(String targetWord, Language language, Options options) {
-        return generateOriginalPromptTemplate() +
-                "The word translated to the native language of English.\nA very basic sentence in the target language using the provided word.\nThat same sentence translated into the native language of English\nThe structure should be:\n" +
-                "{\n" +
-                StringUtils.createJsonComponent("nativeSentence", "<sentence in native English language>") + ",\n" +
-                StringUtils.createJsonComponent("targetSentence", "<sentence in target language>") + "\n" +
-                "}\n" +
-                "\n\nThe word is " + targetWord + " and the target language is " + language.getName() + ".\n";
+    public String generatePrompt(String targetWord, FlashcardType flashcardType, Language language, Options options) {
+        return generateBasePrompt() + getFlashcardStructure(flashcardType) + "The word is " + targetWord + " and the target language is " + language.getName() + ".\n";
     }
 
     @Override
@@ -61,7 +45,15 @@ public class PromptServiceGPTImpl implements PromptService {
         return "The next word is " + targetWord;
     }
 
-    private String generateOriginalPromptTemplate() {
+    private String generateBasePrompt() {
         return "Given a word in a target language generate the following JSON.\n\"The JSON should include:\n";
+    }
+
+    private String getFlashcardStructure(FlashcardType flashcardType) {
+        return switch (flashcardType) {
+            case WORD -> WordFlashcard.JSON_STRUCTURE_FOR_PROMPT;
+            case SENTENCE -> SentenceFlashcard.JSON_STRUCTURE_FOR_PROMPT;
+            default -> throw new IllegalArgumentException("Unsupported FlashcardType: " + flashcardType);
+        };
     }
 }

@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.RequiredArgsConstructor;
+import org.jakegodsall.models.enums.FlashcardType;
+import org.jakegodsall.models.flashcards.Flashcard;
 import org.jakegodsall.models.flashcards.SentenceFlashcard;
 import org.jakegodsall.models.flashcards.WordFlashcard;
 import org.jakegodsall.services.json.JsonParseService;
@@ -45,70 +47,69 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
     }
 
     @Override
-    public WordFlashcard parseWordFlashcard(String responseBody) throws JsonParseException {
+    public Flashcard parseFlashcard(String responseBody, FlashcardType flashcardType) {
         try {
-            // Get the required JSON String
             String content = parseContentFromResponse(responseBody);
 
-            // Parse the JSON into a JsonNode tree
+            // Parse the JSON int oa JsonNode tree
             JsonNode rootNode = objectMapper.readTree(content);
 
-            // Navigate the JSON tree to extract the required values
-            JsonNode nativeWordNode = rootNode.path("nativeWord");
-            if (nativeWordNode.isMissingNode()) {
-                throw new NoSuchElementException("Missing 'nativeWord' field in the JSON response");
-            }
-            JsonNode targetWordNode = rootNode.path("targetWord");
-            if (targetWordNode.isMissingNode()) {
-                throw new NoSuchElementException("Missing 'targetWord' field in the JSON response");
-            }
-            JsonNode targetSentenceNode = rootNode.path("targetSentence");
-            if (targetSentenceNode.isMissingNode()) {
-                throw new NoSuchElementException("Missing 'targetSentence' field in the JSON response");
-            }
-
-            // Encapsulate in WordFlashcard object and return
-            return new WordFlashcard(
-                    nativeWordNode.asText(),
-                    targetWordNode.asText(),
-                    targetSentenceNode.asText()
-            );
+            // Delegate to specific parsing logic based on FlashcardType
+            return switch (flashcardType) {
+                case WORD -> parseWordFlashcardFromJson(rootNode);
+                case SENTENCE -> parseSentenceFlashcardFromJson(rootNode);
+                default -> throw new IllegalArgumentException("Unsupported FlashcardType: " + flashcardType);
+            };
         } catch (JsonProcessingException ex) {
-            // Handle specific JSON processing exceptions
-            throw new JsonParseException("Failed to parse JSON");
+            System.err.println(ex.getMessage());
+            return null;
         }
     }
 
-    @Override
-    public SentenceFlashcard parseSentenceFlashcard(String responseBody) throws JsonParseException {
-        try {
-            // Get the required JSON String
-            String content = parseContentFromResponse(responseBody);
+    /**
+     * Parses a WordFlashcard from the given JsonNode.
+     */
+    private WordFlashcard parseWordFlashcardFromJson(JsonNode rootNode) {
+        JsonNode nativeWordNode = getJsonNode(rootNode, "nativeWord");
+        JsonNode targetWordNode = getJsonNode(rootNode, "targetWord");
+        JsonNode targetSentenceNode = getJsonNode(rootNode, "targetSentence");
 
-            // Parse the JSON into a JsonNode tree
-            JsonNode rootNode = objectMapper.readTree(content);
-
-            // Navigate the JSON tree to extract the required values
-            JsonNode nativeSentenceNode = rootNode.path("nativeSentence");
-            if (nativeSentenceNode.isMissingNode())
-                throw new NoSuchElementException("Missing 'nativeSentence' field in the JSON response");
-            JsonNode targetSentenceNode = rootNode.path("targetSentence");
-            if (targetSentenceNode.isMissingNode())
-                throw new NoSuchElementException("Missing 'targetSentence' field in the JSON response");
-
-            // Encapsulate in SentenceFlashcard object and return
-            return new SentenceFlashcard(
-                    nativeSentenceNode.asText(),
-                    targetSentenceNode.asText()
-            );
-        } catch (NoSuchElementException ex) {
-        throw ex;
-        } catch (Exception ex) {
-            throw new JsonParseException("Failed to parse SentenceFlashcard JSON");
-        }
+        return new WordFlashcard(
+                nativeWordNode.asText(),
+                targetWordNode.asText(),
+                targetSentenceNode.asText()
+        );
     }
 
-    public String parseContentFromResponse(String responseBody) throws JsonProcessingException {
+    /**
+     * Parses a SentenceFlashcard from the given JsonNode.
+     */
+    private SentenceFlashcard parseSentenceFlashcardFromJson(JsonNode rootNode) {
+        JsonNode nativeSentenceNode = getJsonNode(rootNode, "nativeSentence");
+        JsonNode targetSentenceNode = getJsonNode(rootNode, "targetSentence");
+
+        return new SentenceFlashcard(
+                nativeSentenceNode.asText(),
+                targetSentenceNode.asText()
+        );
+    }
+
+    /**
+     * Retrieves a JsonNode from the root and throws an exception if the field is missing.
+     */
+    private JsonNode getJsonNode(JsonNode rootNode, String fieldName) {
+        JsonNode node = rootNode.path(fieldName);
+        if (node.isMissingNode()) {
+            throw new NoSuchElementException("Missing '" + fieldName + "' field in the JSON response");
+        }
+        return node;
+    }
+
+    /**
+     * Extracts the "content" field from the API response JSON.
+     * Throws an exception if any required field is missing.
+     */
+    private String parseContentFromResponse(String responseBody) throws JsonProcessingException {
         // Parse the JSON into a JsonNode tree
         JsonNode rootNode = objectMapper.readTree(responseBody);
 
@@ -127,6 +128,11 @@ public class JsonParseServiceGPTImpl implements JsonParseService {
             throw new NoSuchElementException("Missing 'content' field in the JSON response");
 
         // Return the response
-        return contentNode.asText();
+        String content = "";
+        if (contentNode.isObject() || contentNode.isArray())
+            content = contentNode.toString();
+        if (contentNode.isValueNode())
+            content = contentNode.asText();
+        return content;
     }
 }

@@ -2,15 +2,17 @@ package org.jakegodsall.services.flashcard;
 
 import org.jakegodsall.models.Language;
 import org.jakegodsall.models.Options;
-import org.jakegodsall.models.flashcards.SentenceFlashcard;
-import org.jakegodsall.models.flashcards.WordFlashcard;
+import org.jakegodsall.models.enums.FlashcardType;
+import org.jakegodsall.models.flashcards.Flashcard;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Interface for FlashcardService to define methods for interacting with language models.
  */
 public interface FlashcardService {
+
     /**
      * Retrieves a list of available models from the OpenAI API.
      *
@@ -19,22 +21,36 @@ public interface FlashcardService {
     List<String> getAvailableModels();
 
     /**
-     * Generates a flashcard for a specific word in a target language.
+     * Generates a flashcard for the specified target word.
      *
-     * @param targetWord The word in the target language for which the flashcard should be generated.
-     * @param language   The language object that contains information about the target language.
-     * @param options    Additional options for customizing the flashcard generation.
-     * @return A {@link WordFlashcard} object containing the native word, the target word, and an example sentence using the target word.
+     * @param targetWord the word for which the flashcard is generated
+     * @param flashcardType the type of the flashcard (e.g., multiple choice, fill-in-the-blank)
+     * @param language the language of the flashcard content
+     * @param options additional options to customize flashcard generation
+     * @return the generated flashcard
      */
-    WordFlashcard getWordFlashcard(String targetWord, Language language, Options options);
+    Flashcard generateFlashcard(String targetWord, FlashcardType flashcardType, Language language, Options options);
 
     /**
-     * Generates a flashcard for a specific word in a target language, using full sentences.
+     * Generates flashcards sequentially for a list of target words.
      *
-     * @param targetWord The word in the target language for which the sentence flashcard should be generated.
-     * @param language   The language object that contains information about the target language.
-     * @param options    Additional options for customizing the flashcard generation.
-     * @return A {@link SentenceFlashcard} object containing a native sentence and the corresponding sentence in the target language using the target word.
+     * @param targetWords the list of words for which flashcards are generated
+     * @param flashcardType the type of the flashcards (e.g., multiple choice, fill-in-the-blank)
+     * @param language the language of the flashcards
+     * @param options additional options to customize flashcard generation
+     * @return a list of generated flashcards
      */
-    SentenceFlashcard getSentenceFlashcard(String targetWord, Language language, Options options);
+    List<Flashcard> generateFlashcardsSequentially(List<String> targetWords, FlashcardType flashcardType, Language language, Options options);
+
+    /**
+     * Generates flashcards concurrently for a list of target words.
+     *
+     * @param targetWords the list of words for which flashcards are generated
+     * @param language the language of the flashcards
+     * @param options additional options to customize flashcard generation
+     * @return a list of generated flashcards
+     * @throws InterruptedException if the execution is interrupted during concurrent generation
+     * @throws ExecutionException if an exception occurs during concurrent execution
+     */
+    List<Flashcard> generateFlashcardsConcurrently(List<String> targetWords, FlashcardType flashcardType, Language language, Options options) throws InterruptedException, ExecutionException;
 }

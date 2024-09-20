@@ -78,4 +78,23 @@ class FilenameUtilsTest {
             assertThat(filename).isEqualTo(expectedFilename);
         }
     }
+
+    @Test
+    public void testGenerateFilename_whereExtensionIncludesPrefixDot() {
+        // Arrange
+        String extension = ".txt";
+        LocalDateTime fixedTime = LocalDateTime.of(2023, 8, 28, 15, 45, 30);
+
+        try (MockedStatic<LocalDateTime> mockedLocalDateTime = mockStatic(LocalDateTime.class)) {
+            mockedLocalDateTime.when(LocalDateTime::now).thenReturn(fixedTime);
+
+            // Act
+            String filename = FilenameUtils.generateFilename(language, extension);
+
+            // Assert
+            String expectedTimestamp = fixedTime.format(FORMATTER);
+            String expectedFilename = String.format("%s_english_flashcards.txt", expectedTimestamp);
+            assertThat(filename).isEqualTo(expectedFilename);
+        }
+    }
 }
