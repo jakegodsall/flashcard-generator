@@ -85,20 +85,24 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
     }
 
     @Override
-    public List<Flashcard> generateFlashcardsConcurrently(List<String> targetWords, Language language, Options options) throws InterruptedException, ExecutionException {
+    public List<Flashcard> generateFlashcardsConcurrently(List<String> targetWords, FlashcardType flashcardType, Language language, Options options) throws InterruptedException, ExecutionException {
         List<Future<Flashcard>> futures = new ArrayList<>();
 
         // Submit a task for each word
         for (String targetWord : targetWords) {
-            futures.add(executorService.submit(() -> generateFlashcard(targetWord, FlashcardType.WORD, language, options)));
+            futures.add(executorService.submit(() -> generateFlashcard(targetWord, flashcardType, language, options)));
         }
 
         // Collect the results
         List<Flashcard> flashcards = new ArrayList<>();
         for (Future<Flashcard> future : futures) {
-            flashcards.add(future.get());
+            try {
+                flashcards.add(future.get());
+            } catch (ExecutionException e) {
+                System.err.println("Error generating flashcard: " + e.getCause());
+                throw e;
+            }
         }
-
         return flashcards;
     }
 

@@ -52,5 +52,5 @@ public interface FlashcardService {
      * @throws InterruptedException if the execution is interrupted during concurrent generation
      * @throws ExecutionException if an exception occurs during concurrent execution
      */
-    List<Flashcard> generateFlashcardsConcurrently(List<String> targetWords, Language language, Options options) throws InterruptedException, ExecutionException;
+    List<Flashcard> generateFlashcardsConcurrently(List<String> targetWords, FlashcardType flashcardType, Language language, Options options) throws InterruptedException, ExecutionException;
 }
