@@ -18,6 +18,10 @@ public class FilenameUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
         String timestamp = currentTime.format(formatter);
 
+        // deal with if the user has prefixed the extension with a .
+        if (extension.startsWith("."))
+            extension = extension.substring(1);
+
         return String.format("%s_%s_%s.%s",
                 timestamp,
                 language.getName().toLowerCase(),

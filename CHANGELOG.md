@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 ### Fixed
+- Fixed the `FilenameUtils.generateFilename()` to test whether the user provided a file extension with preceeding `.`.
 
 ## [1.1] - 2024-09-19
 ### Added
