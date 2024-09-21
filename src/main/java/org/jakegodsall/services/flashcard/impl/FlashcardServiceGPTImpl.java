@@ -86,8 +86,10 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             // As the interactive input getInput() returns a singleton list
             String input = inputWord.getFirst();
 
-            System.out.println("Input: " + input);
-
+            if (input.trim().isEmpty()) {
+                System.out.println("You entered an empty value. Please provide a valid word");
+                continue;
+            }
             // Exit condition
             if ("-1".equals(input)) {
                 System.out.println("Exiting interactive mode...");
