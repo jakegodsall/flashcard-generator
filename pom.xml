@@ -144,7 +144,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Maven GPC Plugin -->
+            <!-- Maven GPG Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>

@@ -1,7 +1,7 @@
 package com.jakegodsall.services.http.impl;
 
 import com.jakegodsall.services.http.HttpClientService;
-import com.jakegodsall.impl.ApiKeyConfigImpl;
+import com.jakegodsall.config.impl.ApiKeyConfigImpl;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;

@@ -1,9 +1,9 @@
-package com.jakegodsall.impl;
+package com.jakegodsall.config.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakegodsall.config.ApiKeyConfig;
-import com.jakegodsall.config.exceptions.ApiKeyNotFoundException;
+import com.jakegodsall.exceptions.ApiKeyNotFoundException;
 import com.jakegodsall.utils.DirectoryUtils;
 
 import java.io.*;

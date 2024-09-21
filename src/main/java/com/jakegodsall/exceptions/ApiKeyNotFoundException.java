@@ -1,4 +1,4 @@
-package com.jakegodsall.config.exceptions;
+package com.jakegodsall.exceptions;
 
 /**
  * Exception thrown when the API key is not found in the configuration file.

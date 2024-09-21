@@ -1,11 +1,24 @@
 package com.jakegodsall.models.enums;
 
+/**
+ * Enum representing grammatical tenses.
+ * This enum is used to categorize verbs by their time reference,
+ * indicating whether the action takes place in the past, present, or future.
+ */
 public enum Tense {
-    PAST, PAST_SIMPLE, PAST_PROGRESSIVE, PAST_PERFECT,
 
-    PRESENT, PRESENT_SIMPLE, PRESENT_PERFECT,
+    /**
+     * Represents the past tense.
+     */
+    PAST,
 
-    FUTURE, FUTURE_PERFECT,
+    /**
+     * Represents the present tense.
+     */
+    PRESENT,
 
-    CONDITIONAL, CONDITIONAL_PERFECT
+    /**
+     * Represents the future tense.
+     */
+    FUTURE
 }

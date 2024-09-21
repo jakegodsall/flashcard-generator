@@ -1,4 +1,4 @@
-package com.jakegodsall.config.exceptions;
+package com.jakegodsall.exceptions;
 
 import java.util.NoSuchElementException;
 

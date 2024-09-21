@@ -1,6 +1,6 @@
 package com.jakegodsall.config;
 
-import com.jakegodsall.config.exceptions.NoSuchLanguageException;
+import com.jakegodsall.exceptions.NoSuchLanguageException;
 import com.jakegodsall.models.Language;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

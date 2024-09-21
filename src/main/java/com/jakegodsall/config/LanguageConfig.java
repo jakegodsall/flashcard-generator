@@ -2,7 +2,7 @@ package com.jakegodsall.config;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jakegodsall.config.exceptions.NoSuchLanguageException;
+import com.jakegodsall.exceptions.NoSuchLanguageException;
 import com.jakegodsall.models.Language;
 
 import java.io.IOException;

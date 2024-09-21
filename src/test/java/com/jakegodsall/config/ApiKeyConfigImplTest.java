@@ -1,8 +1,8 @@
 package com.jakegodsall.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jakegodsall.impl.ApiKeyConfigImpl;
-import com.jakegodsall.config.exceptions.ApiKeyNotFoundException;
+import com.jakegodsall.config.impl.ApiKeyConfigImpl;
+import com.jakegodsall.exceptions.ApiKeyNotFoundException;
 import com.jakegodsall.utils.DirectoryUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
