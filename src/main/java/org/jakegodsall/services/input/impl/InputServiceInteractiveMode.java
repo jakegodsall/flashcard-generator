@@ -15,7 +15,7 @@ public class InputServiceInteractiveMode implements InputService {
 
     @Override
     public List<String> getInput() throws IOException {
-       return Collections.singletonList(getWordFromUser(bufferedReader));
+        return Collections.singletonList(getWordFromUser(bufferedReader));
     }
 
     public String getWordFromUser(BufferedReader bufferedReader) throws IOException {

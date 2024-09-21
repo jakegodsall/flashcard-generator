@@ -74,18 +74,17 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
 
     @Override
     public List<Flashcard> generateFlashcardsInteractively(FlashcardType flashcardType, Language language, Options options) throws IOException {
+        List<Flashcard> flashcards = new ArrayList<>();
+
         // Instantiate the interactive mode input service
         InputService interactiveInput = new InputServiceInteractiveMode(new BufferedReader(new InputStreamReader(System.in)));
-
-        List<Flashcard> flashcards = new ArrayList<>();
-        String input;
 
         while (true) {
             // Get input from the user
             List<String> inputWord = interactiveInput.getInput();
 
             // As the interactive input getInput() returns a singleton list
-            input = inputWord.get(0);
+            String input = inputWord.getFirst();
 
             System.out.println("Input: " + input);
 
