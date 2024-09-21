@@ -5,6 +5,7 @@ import org.jakegodsall.models.Options;
 import org.jakegodsall.models.enums.FlashcardType;
 import org.jakegodsall.models.flashcards.Flashcard;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -30,6 +31,17 @@ public interface FlashcardService {
      * @return the generated flashcard
      */
     Flashcard generateFlashcard(String targetWord, FlashcardType flashcardType, Language language, Options options);
+
+    /**
+     * Generates flashcards interactively by prompting the user for words until they exit.
+     *
+     * @param flashcardType the type of flashcards (e.g., multiple choice, fill-in-the-blank)
+     * @param language the language of the flashcards
+     * @param options additional options to customize flashcard generation
+     * @return a list of generated flashcards
+     * @throws IOException if there is an error in reading user input
+     */
+    List<Flashcard> generateFlashcardsInteractively(FlashcardType flashcardType, Language language, Options options) throws IOException;
 
     /**
      * Generates flashcards sequentially for a list of target words.

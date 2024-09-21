@@ -25,7 +25,7 @@ class InputServiceInteractiveModeTest {
     public void setUp() {
         bufferedReader = Mockito.mock(BufferedReader.class);
         flashcardService = Mockito.mock(FlashcardService.class);
-        inputService = new InputServiceInteractiveMode(bufferedReader, flashcardService);
+        inputService = new InputServiceInteractiveMode(bufferedReader);
 
         testLanguage = Language.builder().build();
         testOptions = Options.builder().build();

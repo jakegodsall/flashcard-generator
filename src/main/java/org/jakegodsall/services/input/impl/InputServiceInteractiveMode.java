@@ -1,7 +1,6 @@
 package org.jakegodsall.services.input.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.jakegodsall.services.flashcard.FlashcardService;
 import org.jakegodsall.services.input.InputService;
 
 import java.io.BufferedReader;
@@ -13,7 +12,6 @@ import java.util.List;
 public class InputServiceInteractiveMode implements InputService {
 
     private final BufferedReader bufferedReader;
-    private final FlashcardService flashcardService;
 
     @Override
     public List<String> getInput() throws IOException {

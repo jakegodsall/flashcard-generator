@@ -10,10 +10,14 @@ import org.jakegodsall.models.enums.FlashcardType;
 import org.jakegodsall.models.flashcards.Flashcard;
 import org.jakegodsall.services.flashcard.FlashcardService;
 import org.jakegodsall.services.http.HttpClientService;
+import org.jakegodsall.services.input.InputService;
+import org.jakegodsall.services.input.impl.InputServiceInteractiveMode;
 import org.jakegodsall.services.json.JsonParseService;
 import org.jakegodsall.services.prompt.PromptService;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -66,6 +70,41 @@ public class FlashcardServiceGPTImpl implements FlashcardService {
             System.err.println(ex.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public List<Flashcard> generateFlashcardsInteractively(FlashcardType flashcardType, Language language, Options options) throws IOException {
+        // Instantiate the interactive mode input service
+        InputService interactiveInput = new InputServiceInteractiveMode(new BufferedReader(new InputStreamReader(System.in)));
+
+        List<Flashcard> flashcards = new ArrayList<>();
+        String input;
+
+        while (true) {
+            // Get input from the user
+            List<String> inputWord = interactiveInput.getInput();
+
+            // As the interactive input getInput() returns a singleton list
+            input = inputWord.get(0);
+
+            System.out.println("Input: " + input);
+
+            // Exit condition
+            if ("-1".equals(input)) {
+                System.out.println("Exiting interactive mode...");
+                break;
+            }
+
+            // Otherwise generate the flashcard and ad it to the List
+            Flashcard flashcard = generateFlashcard(input, flashcardType, language, options);
+            flashcards.add(flashcard);
+
+            System.out.println(flashcard);
+            System.out.println(flashcards.size() + " flashcards generated.");
+        }
+
+        // return the list of generated flashcards
+        return flashcards;
     }
 
     @Override
