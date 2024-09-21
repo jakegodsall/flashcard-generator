@@ -115,6 +115,7 @@ The choice of languages and the specific features that can be configured are hea
 ## Future Plans
 As the Flashcard Generator Core continues to evolve, several exciting enhancements and new features are planned to improve its functionality and expand its capabilities.
 
+- Functionality for applying the options to flashcard generation (stress, tenses, genders).
 - Output service for directly generating output compatible with the Anki spaced-repetition flashcard application.
 
 ## Contributing
