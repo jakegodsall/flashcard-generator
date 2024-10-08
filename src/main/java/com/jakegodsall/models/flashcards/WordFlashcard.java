@@ -23,7 +23,7 @@ import com.jakegodsall.utils.StringUtils;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Builder
 @JsonPropertyOrder({ "nativeWord", "targetWord", "exampleTargetSentence" })
 public class WordFlashcard extends Flashcard {

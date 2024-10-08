@@ -20,7 +20,7 @@ import com.jakegodsall.utils.StringUtils;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @JsonPropertyOrder({ "nativeSentence", "targetSentence" })
 public class SentenceFlashcard extends Flashcard {
     /**

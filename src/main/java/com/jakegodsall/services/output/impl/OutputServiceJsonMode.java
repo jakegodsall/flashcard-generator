@@ -1,8 +1,10 @@
 package com.jakegodsall.services.output.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakegodsall.models.flashcards.Flashcard;
 import com.jakegodsall.services.output.OutputService;
+import lombok.RequiredArgsConstructor;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +16,17 @@ import java.util.List;
  * serialize a list of {@link Flashcard} objects into JSON format and save
  * them to a specified file path.
  */
+@RequiredArgsConstructor
 public class OutputServiceJsonMode implements OutputService {
+    private final ObjectMapper objectMapper;
+
+
+    @Override
+    public String serialiseToOutputFormat(List<Flashcard> flashcards) throws JsonProcessingException {
+        if (flashcards.size() == 0)
+            return "";
+        return objectMapper.writeValueAsString(flashcards);
+    }
 
     /**
      * Writes a list of {@link Flashcard} objects to a JSON file at the specified file path.
@@ -25,8 +37,6 @@ public class OutputServiceJsonMode implements OutputService {
      */
     @Override
     public void writeToFile(List<Flashcard> flashcards, String filePath) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-
         // Write the list of flashcards to the specified file as JSON
         objectMapper.writeValue(new File(filePath), flashcards);
     }

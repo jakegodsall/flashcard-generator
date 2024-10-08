@@ -21,6 +21,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OutputServiceCsvMode implements OutputService {
 
+    @Override
+    public String serialiseToOutputFormat(List<Flashcard> flashcards) {
+        return "";
+    }
+
     /**
      * Writes a list of {@link Flashcard} objects to a CSV file at the specified file path.
      * This method uses the `StatefulBeanToCsv` class to convert the list of flashcards into
